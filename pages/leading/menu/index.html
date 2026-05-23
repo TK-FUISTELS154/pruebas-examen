@@ -116,7 +116,6 @@
         </div>
     </div>
 
-    <script src="../../../js/leading_menu.js"></script>
     <script src="../../../js/config.js"></script>
 
     <script>
@@ -242,6 +241,9 @@
                     const height = Math.min(event.data.height, maxHeight);
                     modalContent.style.height = height + 'px';
                 }
+            } else if (event.data.type === 'open-modal') {
+                // Abrir modal desde iframe hijo (para nuevo.html desde administrar_unidad)
+                openModal(event.data.url);
             }
         });
 
