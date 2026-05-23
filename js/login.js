@@ -2,26 +2,26 @@ const userInput = document.getElementById('login-username');
 const passInput = document.getElementById('login-password');
 const loginBtn = document.getElementById('login-confirm');
 
-// Cargar users desde user.js usando fetch
+// URL de MockAPI para la base de datos de usuarios
+const MOCKAPI_URL = "https://6a11aed83e35d0f37ee388a2.mockapi.io/dataBase/user";
+
+// Cargar users desde MockAPI
 let users = [];
 
 async function cargarUsers() {
     try {
-        const response = await fetch('assets/dataBase/user.js');
-        if (!response.ok) throw new Error('No se pudo cargar user.js');
-        const jsContent = await response.text();
-        
-        // Evaluar el contenido JavaScript para obtener la variable users
-        eval(jsContent);
-        
-        console.log('users cargado correctamente:', users);
+        const response = await fetch(MOCKAPI_URL);
+        if (!response.ok) throw new Error('No se pudo cargar usuarios desde MockAPI');
+        users = await response.json();
+        console.log('users cargados correctamente desde MockAPI:', users);
         return true;
     } catch (error) {
-        console.error('Error al cargar users:', error);
+        console.error('Error al cargar users desde MockAPI:', error);
         // Usar datos de prueba como fallback
         users = [
             { username: "admin", password: "admin", rol: "admin" },
-            { username: "user", password: "user", rol: "user" }
+            { username: "user", password: "user", rol: "user" },
+            { username: "user2", password: "user2", rol: "user" }
         ];
         console.log('Usando datos de prueba:', users);
         return false;
@@ -32,7 +32,7 @@ function ejecutarLogin() {
     const usernameInput = userInput.value;
     const passwordInput = passInput.value;
 
-    // Usar la variable global 'users' desde user.js
+    // Usar la variable 'users' desde MockAPI
     if (typeof users !== 'undefined' && users.length > 0) {
         const usuarioEncontrado = users.find(user =>
             user.username === usernameInput && user.password === passwordInput
