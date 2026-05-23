@@ -135,6 +135,103 @@
             cursor: not-allowed;
             opacity: 0.6;
         }
+
+        /* Estilos para popup de nuevo/editar */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup-content {
+            background-color: #f0f0f0;
+            border: 2px solid #7a96df;
+            border-radius: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .popup-header {
+            background: linear-gradient(to right, #99b4d1, #b8d0e9);
+            padding: 5px 10px;
+            color: #000;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #6384a3;
+        }
+
+        .popup-title {
+            background: linear-gradient(to bottom, #3372a5, #1b3750);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .popup-body {
+            padding: 25px;
+        }
+
+        .popup-form-box {
+            border: 1px solid #999999;
+            background-color: #f7f9fc;
+            padding: 25px 30px;
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 16px 15px;
+            align-items: center;
+        }
+
+        .popup-label-text {
+            font-size: 14px;
+            color: #104e8b;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .popup-input, .popup-textarea {
+            background-color: #ffffff;
+            border: 1px solid #7f9db9;
+            padding: 4px 6px;
+            font-size: 14px;
+            outline: none;
+            color: #000;
+            width: 100%;
+        }
+
+        .popup-input.small {
+            width: 120px;
+        }
+
+        .popup-textarea {
+            height: 80px;
+            resize: none;
+        }
+
+        .popup-footer {
+            margin-top: 15px;
+            border: 1px solid #d4d4d4;
+            background-color: #eaeaea;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +266,37 @@
         </main>
     </div>
 
+    <!-- Popup para Nuevo/Editar -->
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup-content">
+            <div class="popup-header">Unidad Administrativa</div>
+            <div class="popup-title">UNIDAD ADMINISTRATIVA</div>
+            <div class="popup-body">
+                <div class="popup-form-box">
+                    <div class="popup-label-text">Unidad Administrativa:</div>
+                    <div>
+                        <input type="text" class="popup-input small" id="popup-unidad-id" value="">
+                    </div>
+
+                    <div class="popup-label-text">Ciudad:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-ciudad" value="">
+                    </div>
+
+                    <div class="popup-label-text" style="align-self: start; padding-top: 4px;">Descripción:</div>
+                    <div>
+                        <textarea class="popup-textarea" id="popup-descripcion"></textarea>
+                    </div>
+                </div>
+
+                <div class="popup-footer">
+                    <button class="btn-control" id="popup-grabar"><u>G</u>rabar</button>
+                    <button class="btn-control" id="popup-salir"><u>S</u>alir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // URLs de la API
         const API_BASE_URL = "https://fuerza-g-grupo-1-uy0x.onrender.com";
@@ -180,6 +308,14 @@
         const btnEliminar = document.getElementById("btn-eliminar");
         const btnSeleccionar = document.getElementById("btn-seleccionar");
         const btnSalir = document.getElementById("btn-salir");
+
+        // Elementos del popup
+        const popupOverlay = document.getElementById("popup-overlay");
+        const popupUnidadId = document.getElementById("popup-unidad-id");
+        const popupCiudad = document.getElementById("popup-ciudad");
+        const popupDescripcion = document.getElementById("popup-descripcion");
+        const btnPopupGrabar = document.getElementById("popup-grabar");
+        const btnPopupSalir = document.getElementById("popup-salir");
 
         let unidades = [];
         let filaSeleccionada = null;
@@ -277,15 +413,14 @@
             btnEliminar.disabled = true;
             btnSeleccionar.disabled = true;
             
-            // Abrir modal para crear nueva unidad
-            if (window.parent !== window) {
-                window.parent.postMessage({ 
-                    type: 'open-modal', 
-                    url: 'nuevo.html' 
-                }, '*');
-            } else {
-                window.open('nuevo.html', '_blank');
-            }
+            // Limpiar campos del popup
+            popupUnidadId.value = "";
+            popupCiudad.value = "";
+            popupDescripcion.value = "";
+            popupUnidadId.readOnly = false;
+            
+            // Mostrar popup
+            popupOverlay.classList.add("active");
         }
 
         // Función Editar
@@ -303,23 +438,15 @@
             btnEliminar.disabled = true;
             btnSeleccionar.disabled = true;
             
-            // Abrir modal para editar unidad con parámetros
+            // Cargar datos en el popup
             const unidad = unidades[filaSeleccionada];
-            const params = new URLSearchParams({
-                id: filaSeleccionada.toString(),
-                unidad: unidad.unidad.toString(),
-                ciudad: unidad.ciudad,
-                descripcion: unidad.descripcion
-            });
+            popupUnidadId.value = unidad.unidad.toString();
+            popupCiudad.value = unidad.ciudad;
+            popupDescripcion.value = unidad.descripcion;
+            popupUnidadId.readOnly = true;
             
-            if (window.parent !== window) {
-                window.parent.postMessage({ 
-                    type: 'open-modal', 
-                    url: 'nuevo.html?' + params.toString() 
-                }, '*');
-            } else {
-                window.open('nuevo.html?' + params.toString(), '_blank');
-            }
+            // Mostrar popup
+            popupOverlay.classList.add("active");
         }
 
         // Función Eliminar
@@ -392,12 +519,108 @@
             }
         }
 
+        // Funciones del popup
+        function mostrarPopup() {
+            popupOverlay.classList.add("active");
+        }
+
+        function ocultarPopup() {
+            popupOverlay.classList.remove("active");
+            restaurarEstado();
+        }
+
+        async function grabarPopup() {
+            const unidad = popupUnidadId.value.trim();
+            const ciudad = popupCiudad.value.trim();
+            const descripcion = popupDescripcion.value.trim();
+
+            if (!unidad) {
+                alert("Por favor ingrese la unidad administrativa");
+                popupUnidadId.focus();
+                return;
+            }
+
+            const apiData = {
+                entidad: 1,
+                unidad: parseInt(unidad),
+                descrip: descripcion,
+                ciudad: ciudad
+            };
+
+            try {
+                if (modoEdicion && unidadOriginal) {
+                    // Actualizar existente (PUT) usando posición
+                    const posicion = filaSeleccionada;
+                    const response = await fetch(`${API_UNIDADES}/${posicion}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(apiData)
+                    });
+                    if (!response.ok) throw new Error("Error al actualizar");
+                    alert("Actualizado exitosamente");
+                } else {
+                    // Crear nuevo (POST)
+                    const response = await fetch(API_UNIDADES, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(apiData)
+                    });
+                    if (!response.ok) throw new Error("Error al crear");
+                    alert("Creado exitosamente");
+                }
+                
+                // Recargar datos y cerrar popup
+                await cargarUnidades();
+                ocultarPopup();
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                alert("Error: No se pudo guardar en la API. Verifique la conexión.");
+            }
+        }
+
+        function salirPopup() {
+            if (popupUnidadId.value || popupCiudad.value || popupDescripcion.value) {
+                if (confirm("Hay cambios sin guardar. ¿Desea salir?")) {
+                    ocultarPopup();
+                }
+            } else {
+                ocultarPopup();
+            }
+        }
+
+        function restaurarEstado() {
+            modoEdicion = false;
+            unidadOriginal = null;
+            filaSeleccionada = null;
+            
+            btnNuevo.disabled = false;
+            btnEditar.disabled = false;
+            btnEliminar.disabled = false;
+            btnSeleccionar.disabled = false;
+            
+            // Limpiar selección
+            Array.from(tablaBody.children).forEach(row => {
+                row.style.backgroundColor = "";
+            });
+        }
+
         // Event listeners
         btnNuevo.addEventListener("click", nuevo);
         btnEditar.addEventListener("click", editar);
         btnEliminar.addEventListener("click", eliminar);
         btnSeleccionar.addEventListener("click", seleccionar);
         btnSalir.addEventListener("click", salir);
+
+        // Event listeners del popup
+        btnPopupGrabar.addEventListener("click", grabarPopup);
+        btnPopupSalir.addEventListener("click", salirPopup);
+
+        // Cerrar popup al hacer clic fuera del contenido
+        popupOverlay.addEventListener("click", (e) => {
+            if (e.target === popupOverlay) {
+                salirPopup();
+            }
+        });
 
         // Escuchar mensajes de otros modales
         window.addEventListener('message', (event) => {
