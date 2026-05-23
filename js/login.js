@@ -2,21 +2,21 @@ const userInput = document.getElementById('login-username');
 const passInput = document.getElementById('login-password');
 const loginBtn = document.getElementById('login-confirm');
 
-// URL de MockAPI para la base de datos de usuarios
-const MOCKAPI_URL = "https://6a11aed83e35d0f37ee388a2.mockapi.io/dataBase/user";
+// URL de GitHub Pages para el archivo JSON de usuarios
+const GITHUB_JSON_URL = "https://tk-fuistels154.github.io/pruebas-examen/assets/dataBase/user.json";
 
-// Cargar users desde MockAPI
+// Cargar users desde GitHub JSON
 let users = [];
 
 async function cargarUsers() {
     try {
-        const response = await fetch(MOCKAPI_URL);
-        if (!response.ok) throw new Error('No se pudo cargar usuarios desde MockAPI');
+        const response = await fetch(GITHUB_JSON_URL);
+        if (!response.ok) throw new Error('No se pudo cargar usuarios desde GitHub');
         users = await response.json();
-        console.log('users cargados correctamente desde MockAPI:', users);
+        console.log('users cargados correctamente desde GitHub:', users);
         return true;
     } catch (error) {
-        console.error('Error al cargar users desde MockAPI:', error);
+        console.error('Error al cargar users desde GitHub:', error);
         // Usar datos de prueba como fallback
         users = [
             { username: "admin", password: "admin", rol: "admin" },
@@ -32,7 +32,7 @@ function ejecutarLogin() {
     const usernameInput = userInput.value;
     const passwordInput = passInput.value;
 
-    // Usar la variable 'users' desde MockAPI
+    // Usar la variable global 'users' desde user.js
     if (typeof users !== 'undefined' && users.length > 0) {
         const usuarioEncontrado = users.find(user =>
             user.username === usernameInput && user.password === passwordInput
