@@ -21,26 +21,6 @@ let gruposContables = [];
 let modoEdicion = false;
 let grupoOriginal = null;
 
-// Datos de prueba (fallback si la API no funciona)
-const datosPrueba = [
-    { idGrupo: 1, nombreGrupo: "EDIFICACIONES", vidaUtil: 40, deprecia: true, actualiza: true, observaciones: "Incluye edificios, construcciones y terrenos" },
-    { idGrupo: 2, nombreGrupo: "MUEBLES Y ENSERES DE OFICINA", vidaUtil: 10, deprecia: true, actualiza: true, observaciones: "Escritorios, sillas, archivadores, etc." },
-    { idGrupo: 3, nombreGrupo: "MAQUINARIA EN GENERAL", vidaUtil: 8, deprecia: true, actualiza: true, observaciones: "Maquinaria industrial y equipos de producción" },
-    { idGrupo: 4, nombreGrupo: "EQUIPO MEDICO Y DE LABORATORIO", vidaUtil: 8, deprecia: true, actualiza: true, observaciones: "Equipos médicos, instrumentos de laboratorio" },
-    { idGrupo: 5, nombreGrupo: "EQUIPO DE COMUNICACIONES", vidaUtil: 5, deprecia: true, actualiza: true, observaciones: "Radios, teléfonos, sistemas de comunicación" },
-    { idGrupo: 6, nombreGrupo: "EQUIPO EDUCACIONAL Y RECREATIVO", vidaUtil: 8, deprecia: true, actualiza: true, observaciones: "Pizarras, proyectores, equipos deportivos" },
-    { idGrupo: 7, nombreGrupo: "VEHICULOS AUTOMOTORES", vidaUtil: 5, deprecia: true, actualiza: true, observaciones: "Automóviles, camiones, motocicletas" },
-    { idGrupo: 8, nombreGrupo: "EQUIPO DE COMPUTACION", vidaUtil: 5, deprecia: true, actualiza: true, observaciones: "Computadoras, servidores, periféricos" },
-    { idGrupo: 9, nombreGrupo: "HERRAMIENTAS Y UTENSILIOS", vidaUtil: 5, deprecia: true, actualiza: true, observaciones: "Herramientas manuales, eléctricas" },
-    { idGrupo: 10, nombreGrupo: "LIBROS Y COLECCIONES", vidaUtil: 10, deprecia: true, actualiza: true, observaciones: "Bibliotecas técnicas, colecciones especializadas" },
-    { idGrupo: 11, nombreGrupo: "EQUIPO DE SEGURIDAD", vidaUtil: 5, deprecia: true, actualiza: true, observaciones: "Cámaras, alarmas, sistemas de seguridad" },
-    { idGrupo: 12, nombreGrupo: "EQUIPO DE AIRE ACONDICIONADO", vidaUtil: 8, deprecia: true, actualiza: true, observaciones: "Aires acondicionados, sistemas de climatización" },
-    { idGrupo: 13, nombreGrupo: "EQUIPO DE COCINA", vidaUtil: 5, deprecia: true, actualiza: true, observaciones: "Refrigeradores, hornos, equipos de cocina" },
-    { idGrupo: 14, nombreGrupo: "EQUIPO DE LIMPIEZA", vidaUtil: 3, deprecia: true, actualiza: true, observaciones: "Aspiradoras, lavadoras, equipos de limpieza" },
-    { idGrupo: 15, nombreGrupo: "EQUIPO DE SONIDO", vidaUtil: 8, deprecia: true, actualiza: true, observaciones: "Sistemas de sonido, amplificadores, micrófonos" }
-];
-
-// Función para cargar los grupos desde la API
 async function cargarGrupos() {
     try {
         const response = await fetch(API_GRUPOS);

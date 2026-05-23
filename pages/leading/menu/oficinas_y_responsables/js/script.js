@@ -28,61 +28,6 @@ let estados = [];
 let modoEdicion = false;
 let oficinaOriginal = null;
 
-// Datos de prueba (fallback si la API no funciona)
-const datosPruebaEstados = [
-    { codestado: 1, nomestado: "ACTIVO" },
-    { codestado: 2, nomestado: "INACTIVO" }
-];
-
-const datosPruebaOficinas = [
-    { idOficina: "101", nombreOficina: "DIRECCIÓN ADMINISTRATIVA", observacion: "Oficina central del piso 1", idEstado: 1 },
-    { idOficina: "102", nombreOficina: "DEPARTAMENTO DE CONTABILIDAD", observacion: "Área financiera externa", idEstado: 1 },
-    { idOficina: "103", nombreOficina: "ALMACÉN GENERAL", observacion: "Depósito de activos fijos e insumos", idEstado: 2 },
-    { idOficina: "104", nombreOficina: "RECURSOS HUMANOS", observacion: "Gestión de personal", idEstado: 1 },
-    { idOficina: "105", nombreOficina: "DEPARTAMENTO DE INFORMÁTICA", observacion: "Soporte técnico y sistemas", idEstado: 1 },
-    { idOficina: "106", nombreOficina: "MANTENIMIENTO", observacion: "Servicio de mantenimiento general", idEstado: 1 },
-    { idOficina: "107", nombreOficina: "COMPRAS", observacion: "Adquisiciones y proveedores", idEstado: 1 },
-    { idOficina: "108", nombreOficina: "VENTAS", observacion: "Área comercial", idEstado: 1 },
-    { idOficina: "109", nombreOficina: "LEGAL", observacion: "Asesoría jurídica", idEstado: 1 },
-    { idOficina: "110", nombreOficina: "AUDITORÍA INTERNA", observacion: "Control y fiscalización", idEstado: 1 }
-];
-
-const datosPruebaResponsables = {
-    "101": [
-        { codResponsable: 1, nombreCompleto: "Juan Pérez", cargo: "Director General", ci: "1234567", expedido: "LP", idEstado: 1 },
-        { codResponsable: 2, nombreCompleto: "Ana García", cargo: "Secretaria", ci: "2345678", expedido: "CB", idEstado: 1 }
-    ],
-    "102": [
-        { codResponsable: 3, nombreCompleto: "María López", cargo: "Jefa Contabilidad", ci: "3456789", expedido: "SC", idEstado: 1 },
-        { codResponsable: 4, nombreCompleto: "Carlos Ruiz", cargo: "Contador Auxiliar", ci: "4567890", expedido: "LP", idEstado: 1 }
-    ],
-    "103": [
-        { codResponsable: 5, nombreCompleto: "Pedro Sánchez", cargo: "Encargado Almacén", ci: "5678901", expedido: "OR", idEstado: 2 }
-    ],
-    "104": [
-        { codResponsable: 6, nombreCompleto: "Laura Martínez", cargo: "Jefa RRHH", ci: "6789012", expedido: "PT", idEstado: 1 },
-        { codResponsable: 7, nombreCompleto: "Roberto Díaz", cargo: "Reclutador", ci: "7890123", expedido: "CB", idEstado: 1 }
-    ],
-    "105": [
-        { codResponsable: 8, nombreCompleto: "Fernando Torres", cargo: "Jefe Informática", ci: "8901234", expedido: "LP", idEstado: 1 }
-    ],
-    "106": [
-        { codResponsable: 9, nombreCompleto: "Miguel Ángel", cargo: "Supervisor Mantenimiento", ci: "9012345", expedido: "SC", idEstado: 1 }
-    ],
-    "107": [
-        { codResponsable: 10, nombreCompleto: "Carmen Vega", cargo: "Jefa Compras", ci: "0123456", expedido: "CB", idEstado: 1 }
-    ],
-    "108": [
-        { codResponsable: 11, nombreCompleto: "Diego Flores", cargo: "Gerente Ventas", ci: "1234560", expedido: "LP", idEstado: 1 }
-    ],
-    "109": [
-        { codResponsable: 12, nombreCompleto: "Sofía Ramírez", cargo: "Abogada Principal", ci: "2345670", expedido: "PT", idEstado: 1 }
-    ],
-    "110": [
-        { codResponsable: 13, nombreCompleto: "Andrés Morales", cargo: "Auditor Interno", ci: "3456780", expedido: "SC", idEstado: 1 }
-    ]
-};
-
 // Función para cargar los estados desde la API
 async function cargarEstados() {
     try {
