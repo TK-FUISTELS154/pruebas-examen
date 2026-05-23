@@ -430,6 +430,9 @@
                 return;
             }
             
+            console.log("Editando fila:", filaSeleccionada);
+            console.log("Unidad seleccionada:", unidades[filaSeleccionada]);
+            
             modoEdicion = true;
             unidadOriginal = {...unidades[filaSeleccionada]};
             
@@ -440,13 +443,18 @@
             
             // Cargar datos en el popup
             const unidad = unidades[filaSeleccionada];
+            console.log("Cargando datos en popup:", unidad);
+            
             popupUnidadId.value = unidad.unidad.toString();
             popupCiudad.value = unidad.ciudad;
             popupDescripcion.value = unidad.descripcion;
             popupUnidadId.readOnly = true;
             
+            console.log("Datos cargados - Unidad ID:", popupUnidadId.value, "Ciudad:", popupCiudad.value, "Descripción:", popupDescripcion.value);
+            
             // Mostrar popup
             popupOverlay.classList.add("active");
+            console.log("Popup mostrado");
         }
 
         // Función Eliminar
@@ -460,16 +468,28 @@
 
             try {
                 const posicion = filaSeleccionada;
+                console.log("Intentando eliminar posición:", posicion);
+                
                 const response = await fetch(`${API_UNIDADES}/${posicion}`, {
                     method: "DELETE"
                 });
-                if (!response.ok) throw new Error("Error al eliminar");
                 
+                console.log("Response status:", response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Error response:", errorText);
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                // Eliminar del array local
                 unidades.splice(filaSeleccionada, 1);
                 
-                // Restaurar estado después de eliminar
-                restaurarEstado();
+                // Renderizar tabla primero
                 renderizarTabla();
+                
+                // Luego restaurar estado
+                restaurarEstado();
                 
                 alert("Eliminado exitosamente");
             } catch (error) {
