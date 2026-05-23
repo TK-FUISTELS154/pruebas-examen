@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../../css/styles_main/leading_menu.css">
+    <title>Menu</title>
+    <style>
+        /* Estilos para ventana flotante */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: #f0f0f0;
+            border: 2px solid #7a96df;
+            border-radius: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            max-height: 700px;
+            overflow: hidden;
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+
+        .modal-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="menu-title">
+            <h1>SISTEMA DE ACTIVOS FIJOS</h1>
+        </div>
+        <div class="menu-header">
+            <div class="menu-img">
+                <div class="menu-img-bandera">
+                    <img src="../../../assets/img/bandera.png" alt="bandera">
+                </div>
+                <div class="menu-img-vsiaf">
+                    <img src="../../../assets/img/vsiaf.png" alt="vsiaf">
+                </div>
+            </div>
+            <div class="menu-user">
+                <div class="menu-user-item">
+                    <span><strong>USUARIO: </strong></span>
+                    <span id="user-name"></span>
+                </div>
+                <div class="menu-user-item">
+                    <span><strong>BACKUPS: </strong></span>
+                    <span id="backups-count"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <div class="menu-contenedor">
+            <h2>MENU PRINCIPAL</h2>
+            <div class="menu-buttons">
+                <div class="menu-button">
+                    <button id="activos-fijos">ACTIVOS FIJOS</button>
+                </div>
+                <div class="menu-button">
+                    <button id="grupos-y-auxiliares">GRUPOS Y AUXILIARES</button>
+                </div>
+                <div class="menu-button">
+                    <button id="oficinas-y-responsables">OFICINAS Y RESPONSABLES</button>
+                </div>
+                <div class="menu-button">
+                    <button id="generar-reportes">GENERAR REPORTES</button>
+                </div>
+                <div class="menu-button">
+                    <button id="administradores">ADMINISTRADORES</button>
+                </div>
+                <div class="menu-button">
+                    <button id="iniciar-sesion">INICIAR SESIÓN</button>
+                </div>
+                <div class="menu-button">
+                    <button id="respaldos-db">RESPALDOS DB</button>
+                </div>
+                <div class="menu-button">
+                    <button id="administrar-unidad">ADMINISTRAR UNIDAD</button>
+                </div>
+                <div class="menu-button">
+                    <button id="localizacion-db">LOCALIZACIÓN DB</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Ventana flotante para contenido -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <iframe id="modal-iframe" class="modal-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <script src="../../../js/leading_menu.js"></script>
+    <script src="../../../js/config.js"></script>
+
+    <script>
+        // Configuración de imágenes de fondo por departamento
+        const themeImages = {
+            'beni': '../../../assets/img/themes/beni.PNG',
+            'chuquisaca': '../../../assets/img/themes/chuquizaca.PNG',
+            'cochabamba': '../../../assets/img/themes/cochabamba.PNG',
+            'la-paz': '../../../assets/img/themes/la-paz.PNG',
+            'oruro': '../../../assets/img/themes/oruro.PNG',
+            'pando': '../../../assets/img/themes/pando.PNG',
+            'potosi': '../../../assets/img/themes/potosi.PNG',
+            'santa-cruz': '../../../assets/img/themes/santa-cruz.PNG',
+            'tarija': '../../../assets/img/themes/tarija.png'
+        };
+
+        // Obtener departamento del usuario (predeterminado potosi)
+        function getDepartamento() {
+            return localStorage.getItem('departamento') || 'potosi';
+        }
+
+        // Establecer imagen de fondo
+        function setThemeBackground() {
+            const departamento = getDepartamento();
+            const imageUrl = themeImages[departamento] || themeImages['potosi'];
+            document.getElementById('main-content').style.backgroundImage = `url('${imageUrl}')`;
+            document.getElementById('main-content').style.backgroundSize = 'cover';
+            document.getElementById('main-content').style.backgroundPosition = 'center';
+            document.getElementById('main-content').style.backgroundRepeat = 'no-repeat';
+            document.getElementById('main-content').style.minHeight = 'calc(100vh - 120px)';
+        }
+
+        // Función para abrir ventana flotante
+        function openModal(url) {
+            const modal = document.getElementById('modal-overlay');
+            const modalContent = document.querySelector('.modal-content');
+            const iframe = document.getElementById('modal-iframe');
+            
+            // Resetear tamaño
+            modalContent.style.width = 'auto';
+            modalContent.style.height = 'auto';
+            
+            iframe.src = url;
+            modal.classList.add('active');
+        }
+
+        // Función para cerrar ventana flotante
+        function closeModal() {
+            const modal = document.getElementById('modal-overlay');
+            const iframe = document.getElementById('modal-iframe');
+            iframe.src = '';
+            modal.classList.remove('active');
+        }
+
+        // Event listeners para botones del menú
+        document.getElementById('activos-fijos').addEventListener('click', () => {
+            openModal('activos_fijos/index.html');
+        });
+
+        document.getElementById('grupos-y-auxiliares').addEventListener('click', () => {
+            openModal('grupos_y_auxiliares/index.html');
+        });
+
+        document.getElementById('oficinas-y-responsables').addEventListener('click', () => {
+            openModal('oficinas_y_responsables/index.html');
+        });
+
+        document.getElementById('generar-reportes').addEventListener('click', () => {
+            openModal('generar_reportes/index.html');
+        });
+
+        document.getElementById('administradores').addEventListener('click', () => {
+            openModal('administradores/index.html');
+        });
+
+        document.getElementById('iniciar-sesion').addEventListener('click', () => {
+            openModal('iniciar_sesion/index.html');
+        });
+
+        document.getElementById('respaldos-db').addEventListener('click', () => {
+            openModal('respaldos_db/index.html');
+        });
+
+        document.getElementById('administrar-unidad').addEventListener('click', () => {
+            openModal('administrar_unidad/index.html');
+        });
+
+        document.getElementById('localizacion-db').addEventListener('click', () => {
+            openModal('localizacion_db/index.html');
+        });
+
+        // Cerrar modal al hacer clic fuera del contenido
+        document.getElementById('modal-overlay').addEventListener('click', (e) => {
+            if (e.target.id === 'modal-overlay') {
+                closeModal();
+            }
+        });
+
+        // Escuchar mensajes del iframe (para login exitoso y ajuste de tamaño)
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'login-success') {
+                // Actualizar nombre de usuario
+                document.getElementById('user-name').textContent = event.data.username;
+                // Cerrar modal
+                closeModal();
+            } else if (event.data.type === 'close-modal') {
+                // Cerrar modal (botón salir del login)
+                closeModal();
+            } else if (event.data.type === 'resize-iframe') {
+                // Ajustar tamaño del modal según el contenido del iframe
+                const modalContent = document.querySelector('.modal-content');
+                const iframe = document.getElementById('modal-iframe');
+                
+                // Límites máximos razonables
+                const maxWidth = window.innerWidth * 0.95;
+                const maxHeight = window.innerHeight * 0.95;
+                
+                if (event.data.width) {
+                    const width = Math.min(event.data.width, maxWidth);
+                    modalContent.style.width = width + 'px';
+                }
+                if (event.data.height) {
+                    const height = Math.min(event.data.height, maxHeight);
+                    modalContent.style.height = height + 'px';
+                }
+            }
+        });
+
+        // Inicializar
+        document.getElementById('user-name').textContent = getUserName();
+        document.getElementById('backups-count').textContent = getBackupsCount() || 'None';
+        setThemeBackground();
+    </script>
+</body>
+
+</html>

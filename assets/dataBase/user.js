@@ -1,0 +1,17 @@
+const users = [
+    {
+        username: "admin",
+        password: "admin",
+        rol: "admin"
+    },
+    {
+        username: "user",
+        password: "user",
+        rol: "user"
+    },
+    {
+        username: "user2",
+        password: "user2",
+        rol: "user"
+    }
+];

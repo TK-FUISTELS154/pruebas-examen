@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes a Medida</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="window-container">
+        <header>REPORTES A MEDIDA</header>
+        <div class="sub-header">UNIDAD: UFV 2026</div>
+        <div class="main-title">REPORTES</div>
+
+        <main>
+            <div class="section-box">
+                <div class="fields-container">
+                    <div class="label-text">Entidad:</div>
+                    <input type="text" class="center-text" value="2026">
+                    <input type="text" value="20260523">
+
+                    <div class="label-text">Unidad:</div>
+                    <input type="text" class="center-text" value="UFV">
+                    <select>
+                        <option value=""></option>
+                    </select>
+                </div>
+                <button class="btn-action">Consolidado</button>
+            </div>
+
+            <div class="section-box">
+                <div class="fields-container">
+                    <div class="label-text">Grupo:</div>
+                    <input type="text" class="center-text" value="0">
+                    <select><option value=""></option></select>
+
+                    <div class="label-text">Auxiliar:</div>
+                    <input type="text" class="center-text" value="0">
+                    <select><option value=""></option></select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <button class="btn-action">Todos</button>
+                    <button class="btn-action">Todos</button>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <div class="fields-container">
+                    <div class="label-text">Activo:</div>
+                    <select style="grid-column: 2 / 4;"><option value=""></option></select>
+
+                    <div class="label-text">Oficina:</div>
+                    <input type="text" class="center-text" value="0">
+                    <select><option value=""></option></select>
+
+                    <div class="label-text">Responsable:</div>
+                    <input type="text" class="center-text" value="0">
+                    <select><option value=""></option></select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <button class="btn-action">Todos</button>
+                    <button class="btn-action">Todos</button>
+                    <button class="btn-action">Todos</button>
+                </div>
+            </div>
+
+            <div class="bottom-row">
+                <div class="box-años">
+                    <div class="label-text">De: Año:</div>
+                    <input type="text" class="center-text" value="0">
+                    <div class="info-text">Año Inicial de los Reportes a Generar</div>
+
+                    <div class="label-text">A: Año:</div>
+                    <input type="text" class="center-text" value="0">
+                    <div class="info-text">Año Final de los Reportes a Generar</div>
+                </div>
+                <div class="center-btn-container">
+                    <button class="btn-action" style="width: 140px; height: 32px;">Todos</button>
+                </div>
+            </div>
+
+            <div class="box-calculados">
+                <div class="calculados-inputs">
+                    <span>Calculados A: &nbsp; Dia:</span>
+                    <input type="text" class="center-text" value="23">
+                    
+                    <span>Mes:</span>
+                    <input type="text" class="center-text" value="05">
+                    <span style="color: #000; font-weight: normal; margin-left: 5px;">MAYO</span>
+
+                    <span style="margin-left: 15px;">Año:</span>
+                    <input type="text" id="txt-año" class="center-text" value="2026">
+
+                    <div class="ufv-container">
+                        <span>UFV:</span>
+                        <input type="text" value=".">
+                    </div>
+                </div>
+                <button class="btn-hoy">Hoy</button>
+            </div>
+
+            <div class="footer-bar">
+                <button class="btn-main"><u>R</u>eportes</button>
+                <button class="btn-main btn-salir"><u>S</u>alir</button>
+            </div>
+        </main>
+    </div>
+
+</body>
+<script src="../../../../js/iframe-resize.js"></script>
+<script src="../../../../js/modal-close.js"></script>
+</html>

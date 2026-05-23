@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    align-items: center;
+    background-color: #f2f3f9;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+header h1 {
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    height: 30px;
+    padding: 10px;
+}
+
+.header-left img {
+    width: 20px;
+    height: 20px;
+}
+
+.header-right {
+    display: flex;
+    gap: 10px;
+}
+
+#minimize, #maximize {
+    font-size: 20px;
+}
+
+#minimize, #maximize, #close {
+    width: 30px;
+    height: 30px;
+    background-color: #f2f3f9;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-bar {
+    display: flex;
+    background-color: #ffffff;
+    border-bottom: px solid #f2f3f9;
+    padding: 1px 5px;
+    position: relative;
+}
+
+.menu-item {
+    position: relative;
+}
+
+.menu-item summary {
+    list-style: none;
+    background-color: transparent;
+    border: none;
+    cursor: default;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-family: 'Tahoma', 'Arial', sans-serif;
+    color: #000;
+    outline: none;
+    user-select: none;
+}
+
+.menu-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.menu-item summary:hover,
+.menu-item[open] summary {
+    background-color: #e5e5e59d;
+    color: #000000;
+}
+
+.dropdown-fox {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #f0f0f0;
+    min-width: 220px;
+    z-index: 1000;
+    padding: 2px;
+
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 2px solid #808080;
+    border-bottom: 2px solid #808080;
+    
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.opcion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 15px 4px 25px;
+    color: #000;
+    font-size: 12px;
+    cursor: default;
+}
+
+.opcion:hover {
+    background-color: #057cfc;
+    color: #ffffff;
+}
+
+.atajo {
+    margin-left: 30px;
+    font-weight: normal;
+    color: inherit;
+}
+
+.deshabilitada {
+    color: #808080;
+}
+
+.deshabilitada:hover {
+    background-color: #057cfc;
+    color: #808080;
+}
+
+footer {
+    background-color: #f0f0f0;
+    position: fixed;
+    display: flex;
+    justify-content: end;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    border: 2px solid #808080;
+} 
+
+.footer-content {
+    display: flex;
+}
+
+.rol, .road, .connect {
+    border-left: 2px solid #808080;
+    padding: 5px;
+}
+
+

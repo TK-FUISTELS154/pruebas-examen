@@ -1,0 +1,128 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 5px;
+    background-color: #b2cbe5;
+}
+
+h1 {
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}
+
+.menu-header {
+    background: linear-gradient(to right bottom, #5d9acc, #1e4564);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-img {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-img-bandera img {
+    width: 100px;
+    height: auto;
+}
+
+.menu-img-vsiaf img {
+    width: 250px;
+    height: auto;
+}
+
+.menu-user {
+    margin: 0 120px 30px 0px;
+}
+
+.menu-user span {
+    color: #f8fafa;
+    font-size: 14px;
+}
+
+main {
+    background-color: #ffffff;
+    height: calc(100vh - 120px); 
+    width: 100%;
+    display: flex;
+}
+
+.menu-contenedor {
+    width: 220px;
+    background-color: #ffffff;
+    border-right: 2px solid #b3c7d9;
+    padding: 10px;
+}
+
+.menu-contenedor h2 {
+    color: #285f96;
+    font-size: 18px;
+    text-align: center;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    margin-bottom: 10px;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-button {
+    padding: 10px 5px;
+    border: 2px solid #adbfd2;
+    border-radius: 3px;
+    background-color: #ececec;
+}
+
+.menu-button button {
+    width: 100%;
+    background: linear-gradient(to bottom, #7fa8d2, #ccf0fa);
+    border: 2px solid #7fa8d2;
+    border-radius: 5px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-button button:active {
+    border-color: #404044;
+}
+
+.menu-button button:hover {
+    background: #7fa8d2;
+}
+
+.conteiner-iframe {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+}
+
+.header-contenido {
+    padding: 10px;
+    border-bottom: 2px solid #e5e5e5;
+    background-color:#ffffff;
+}
+
+.datos-contenedor p {
+    margin: 2px 0;
+    font-size: 14px;
+    color: #285f96;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+}
+
+#content-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}

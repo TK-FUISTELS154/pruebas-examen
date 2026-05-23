@@ -1,0 +1,239 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+    width: 800px;
+    margin: 0 auto;
+}
+
+/* Contenedor Principal */
+.window-container {
+    width: 800px;
+    background-color: #f0f0f0;
+    border: 2px solid #7a96df;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+/* Encabezados Azules */
+header {
+    background: linear-gradient(to right, #99b4d1, #b8d0e9);
+    padding: 5px 10px;
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+    border-bottom: 1px solid #6384a3;
+}
+
+.sub-header {
+    background: linear-gradient(to bottom, #4178a9, #3372a5);
+    color: white;
+    padding: 6px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.main-title {
+    background: linear-gradient(to bottom, #3372a5, #1b3750);
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Cuerpo principal */
+main {
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Bloques de sección redondeados (Grupos/Secciones) */
+.section-box {
+    border: 1px solid #7a96df;
+    border-radius: 8px;
+    padding: 10px 15px;
+    background-color: #f7f9fc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+/* Distribución interna de los campos */
+.fields-container {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 100px 60px 1fr;
+    gap: 8px 10px;
+    align-items: center;
+}
+
+/* Etiquetas */
+.label-text {
+    font-size: 14px;
+    color: #104e8b;
+    font-weight: bold;
+}
+
+/* Inputs y Selects */
+input[type="text"], select {
+    background-color: #e2edfa; /* Azul claro pálido de los campos */
+    border: 1px solid #7f9db9;
+    padding: 3px 5px;
+    font-size: 14px;
+    height: 25px;
+    outline: none;
+    color: #000;
+}
+
+input.center-text {
+    text-align: center;
+}
+
+select {
+    background-color: #ffffff;
+    width: 100%;
+}
+
+/* Bloques especiales inferiores de tamaño partido */
+.bottom-row {
+    display: flex;
+    gap: 15px;
+    align-items: stretch;
+}
+
+.box-años {
+    border: 1px solid #7a96df;
+    border-radius: 8px;
+    padding: 10px 15px;
+    width: 60%;
+    display: grid;
+    grid-template-columns: 80px 60px 1fr;
+    gap: 8px 10px;
+    align-items: center;
+}
+
+.info-text {
+    font-size: 13px;
+    color: #104e8b;
+    padding-left: 5px;
+}
+
+/* Caja de Calculados A: de la parte inferior */
+.box-calculados {
+    border: 1px solid #7a96df;
+    border-radius: 8px;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f7f9fc;
+    font-size: 14px;
+    font-weight: bold;
+    color: #104e8b;
+}
+
+.calculados-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calculados-inputs input {
+    width: 55px;
+}
+
+.calculados-inputs input#txt-año {
+    width: 70px;
+}
+
+.ufv-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 15px;
+}
+
+.ufv-container input {
+    background-color: #b8cfd6 !important; /* Color verdoso/gris del campo UFV */
+    width: 80px;
+}
+
+/* --- BOTONES --- */
+/* Botones Laterales (Consolidado / Todos) */
+.btn-action {
+    width: 110px;
+    height: 26px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+    background: linear-gradient(to bottom, #ffffff, #b2d0ee, #6fa1d2);
+    border: 1px solid #6384a3;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.btn-action:hover {
+    background: linear-gradient(to bottom, #ffffff, #9ec2e6, #528cb3);
+}
+
+/* Botón "Todos" del centro solo */
+.center-btn-container {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Botón "Hoy" inferior */
+.btn-hoy {
+    height: 35px;
+    width: 80px;
+    background: linear-gradient(to bottom, #ffffff, #b2d0ee, #6fa1d2);
+    border: 1px solid #6384a3;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Barra de Botones de Reporte / Salir Final */
+.footer-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border: 1px solid #7a96df;
+    padding: 6px 15px;
+    background-color: #f7f9fc;
+    margin-top: 5px;
+}
+
+.btn-main {
+    width: 110px;
+    padding: 5px 0;
+    font-size: 13px;
+    color: white;
+    background: linear-gradient(to bottom, #417394, #0b2e46);
+    border: 1px solid #10263c;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 2px;
+}
+
+.btn-main:hover {
+    background: linear-gradient(to bottom, #528cb3, #114263);
+}

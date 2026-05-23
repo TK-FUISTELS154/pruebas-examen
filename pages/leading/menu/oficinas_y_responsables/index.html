@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficinas</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="window-container">
+        <header>OFICINA</header>
+        
+        <div class="sub-header">
+            <div>UNIDAD: UFV 2026</div>
+        </div>
+
+        <div class="main-title">OFICINA</div>
+
+        <main>
+            <div class="top-section">
+                <div class="form-inputs">
+                    <div>Oficina</div>
+                    <input type="text" id="input-oficina-id" class="center-text" value="" readonly>
+                    <select id="select-oficina">
+                        </select>
+                    <div id="status-label" class="status-tag">INACTIVO</div>
+
+                    <div style="align-self: start; padding-top: 4px;">Observación</div>
+                    <textarea id="txt-observacion"></textarea>
+                </div>
+
+                <div class="side-actions">
+                    <button class="btn-side">Nuevo</button>
+                    <button class="btn-side active-focus">Modificar</button>
+                    <button class="btn-side">Activar</button>
+                    <button class="btn-side" disabled>Inactivar</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="center">Cod.</th>
+                            <th>Responsable</th>
+                            <th>Cargo</th>
+                            <th>CI</th>
+                            <th>Expedido</th>
+                            <th class="center">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer-controls">
+                <div class="action-group-box">
+                    <button class="btn-footer">Activar</button>
+                    <button class="btn-footer disabled" disabled>Inactivar</button>
+                    <button class="btn-footer">Nuevo</button>
+                    <button class="btn-footer">Modificar</button>
+                    <button class="btn-footer disabled" disabled>Guardar</button>
+                    <button class="btn-footer disabled" disabled>Deshacer</button>
+                </div>
+                <button class="btn-footer btn-salir">Salir</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="../../../../js/iframe-resize.js"></script>
+    <script src="../../../../js/modal-close.js"></script>
+</body>
+</html>
