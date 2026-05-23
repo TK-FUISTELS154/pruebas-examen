@@ -129,12 +129,12 @@ async function cargarOficinas() {
 // Función para obtener el nombre del estado por ID
 function getNombreEstado(idEstado) {
     const estado = estados.find(e => e.codestado === idEstado);
-    return estado ? estado.nombrestado : "DESCONOCIDO";
+    return estado ? estado.nomestado : "DESCONOCIDO";
 }
 
 // Función para obtener el ID del estado por nombre
 function getIdEstado(nombreEstado) {
-    const estado = estados.find(e => e.nombrestado === nombreEstado);
+    const estado = estados.find(e => e.nomestado === nombreEstado);
     return estado ? estado.codestado : 1;
 }
 

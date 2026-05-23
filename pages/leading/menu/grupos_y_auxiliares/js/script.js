@@ -1,6 +1,6 @@
 // URLs de la API
 const API_BASE_URL = "https://fuerza-g-grupo-1-uy0x.onrender.com";
-const API_GRUPOS = "https://6a11aed83e35d0f37ee388a2.mockapi.io/grupos";
+const API_GRUPOS = `${API_BASE_URL}/api/objgasto`;
 
 const selectNombre = document.getElementById("select-nombre");
 const inputGrupo = document.getElementById("input-grupo");
@@ -49,55 +49,28 @@ async function cargarGrupos() {
         }
         const rawData = await response.json();
         
-        // MockAPI devuelve datos directamente en el formato esperado
+
         if (rawData.length > 0) {
             gruposContables = rawData.map(item => ({
-                idGrupo: item.id || item.idGrupo,
-                nombreGrupo: item.nombreGrupo || item.descrip || "GRUPO CONTABLE",
-                vidaUtil: item.vidaUtil || 10,
-                deprecia: item.deprecia !== undefined ? item.deprecia : true,
-                actualiza: item.actualiza !== undefined ? item.actualiza : true,
-                observaciones: item.observaciones || ""
+                idGrupo: item.gestion || item.partida || 1,
+                nombreGrupo: item.descrip || "GRUPO CONTABLE",
+                vidaUtil: 10,
+                deprecia: true,
+                actualiza: true,
+                observaciones: ""
             }));
         } else {
-            // Si el API está vacío, inicializar con datos de prueba
-            console.log("API vacía, inicializando con datos de prueba...");
-            await inicializarDatosPrueba();
+            // Si el API está vacío, usar datos de prueba
+            console.log("API vacía, usando datos de prueba...");
+            gruposContables = [...datosPrueba];
         }
         
         inicializarSelector();
     } catch (error) {
         console.error("Error al cargar grupos:", error);
-        console.log("Inicializando con datos de prueba...");
-        await inicializarDatosPrueba();
-        inicializarSelector();
-    }
-}
-
-// Función para inicializar datos de prueba en MockAPI
-async function inicializarDatosPrueba() {
-    try {
-        for (const grupo of datosPrueba) {
-            await fetch(API_GRUPOS, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(grupo)
-            });
-        }
-        // Recargar después de inicializar
-        const response = await fetch(API_GRUPOS);
-        gruposContables = await response.json();
-        gruposContables = gruposContables.map(item => ({
-            idGrupo: item.id || item.idGrupo,
-            nombreGrupo: item.nombreGrupo,
-            vidaUtil: item.vidaUtil,
-            deprecia: item.deprecia,
-            actualiza: item.actualiza,
-            observaciones: item.observaciones
-        }));
-    } catch (error) {
-        console.error("Error al inicializar datos de prueba:", error);
+        console.log("Usando datos de prueba...");
         gruposContables = [...datosPrueba];
+        inicializarSelector();
     }
 }
 
@@ -178,8 +151,15 @@ function modificarGrupo() {
 
 // Función Guardar
 async function guardarGrupo() {
-    const idGrupo = inputGrupo.value ? parseInt(inputGrupo.value) : null;
+    const idGrupo = inputGrupo.value ? parseInt(inputGrupo.value) : (gruposContables.length > 0 ? Math.max(...gruposContables.map(g => g.idGrupo)) + 1 : 1);
     const nombreGrupo = selectNombre.options[selectNombre.selectedIndex]?.textContent || "NUEVO GRUPO";
+    
+    // Mapear datos al esquema del API (ObjGasto)
+    const apiData = {
+        gestion: idGrupo,
+        partida: idGrupo.toString(),
+        descrip: nombreGrupo
+    };
     
     const nuevoGrupo = {
         idGrupo: idGrupo,
@@ -192,13 +172,13 @@ async function guardarGrupo() {
 
     try {
         if (grupoOriginal) {
-            // Actualizar existente (PUT) usando ID de MockAPI
-            const mockApiId = gruposContables.find(g => g.idGrupo === idGrupo)?.id;
-            if (mockApiId) {
-                const response = await fetch(`${API_GRUPOS}/${mockApiId}`, {
+            // Actualizar existente (PUT) usando posición
+            const posicion = gruposContables.findIndex(g => g.idGrupo === idGrupo);
+            if (posicion >= 0) {
+                const response = await fetch(`${API_GRUPOS}/${posicion}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(nuevoGrupo)
+                    body: JSON.stringify(apiData)
                 });
                 if (!response.ok) throw new Error("Error al actualizar");
             }
@@ -207,18 +187,34 @@ async function guardarGrupo() {
             const response = await fetch(API_GRUPOS, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(nuevoGrupo)
+                body: JSON.stringify(apiData)
             });
             if (!response.ok) throw new Error("Error al crear");
         }
         
-        // Recargar datos desde MockAPI
-        await cargarGrupos();
+        // Actualizar datos locales
+        const index = gruposContables.findIndex(g => g.idGrupo === idGrupo);
+        if (index >= 0) {
+            gruposContables[index] = nuevoGrupo;
+        } else {
+            gruposContables.push(nuevoGrupo);
+        }
+        
+        inicializarSelector();
         restaurarEstado();
         alert("Guardado exitosamente");
     } catch (error) {
         console.error("Error al guardar:", error);
-        alert("Error al guardar en MockAPI");
+        // Guardar localmente si falla la API
+        const index = gruposContables.findIndex(g => g.idGrupo === idGrupo);
+        if (index >= 0) {
+            gruposContables[index] = nuevoGrupo;
+        } else {
+            gruposContables.push(nuevoGrupo);
+        }
+        inicializarSelector();
+        restaurarEstado();
+        alert("Guardado localmente (API no disponible)");
     }
 }
 
@@ -228,21 +224,23 @@ async function eliminarGrupo() {
     if (!confirm("¿Está seguro de eliminar este grupo?")) return;
 
     try {
-        // Usar ID de MockAPI para DELETE
-        const mockApiId = gruposContables.find(g => g.idGrupo === idSeleccionado)?.id;
-        if (mockApiId) {
-            const response = await fetch(`${API_GRUPOS}/${mockApiId}`, {
+        // Usar posición (índice) en lugar de ID para DELETE
+        const posicion = gruposContables.findIndex(g => g.idGrupo === idSeleccionado);
+        if (posicion >= 0) {
+            const response = await fetch(`${API_GRUPOS}/${posicion}`, {
                 method: "DELETE"
             });
             if (!response.ok) throw new Error("Error al eliminar");
         }
         
-        // Recargar datos desde MockAPI
-        await cargarGrupos();
+        gruposContables = gruposContables.filter(g => g.idGrupo !== idSeleccionado);
+        inicializarSelector();
         alert("Eliminado exitosamente");
     } catch (error) {
         console.error("Error al eliminar:", error);
-        alert("Error al eliminar en MockAPI");
+        gruposContables = gruposContables.filter(g => g.idGrupo !== idSeleccionado);
+        inicializarSelector();
+        alert("Eliminado localmente (API no disponible)");
     }
 }
 
