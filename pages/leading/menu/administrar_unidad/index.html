@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad Administrativa</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #dcdcdc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* Ventana con doble borde clásico (Efecto relieve gris) */
+        .window-container {
+            width: 780px;
+            background-color: #f0f0f0;
+            border: 2px solid #ffffff;
+            outline: 2px solid #999999;
+            box-shadow: 3px 3px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Encabezados con los degradados del sistema */
+        header {
+            background: linear-gradient(to right, #99b4d1, #b8d0e9);
+            padding: 5px 10px;
+            color: #000;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #6384a3;
+        }
+
+        .main-title {
+            background: linear-gradient(to bottom, #3372a5, #1b3750);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Cuerpo de la ventana */
+        main {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Contenedor de la Tabla */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffe1; /* Fondo amarillo pálido de las celdas */
+            border: 1px solid #7f9db9;
+        }
+
+        th {
+            background-color: #e3e3e3; /* Gris claro para las cabeceras de columnas */
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px;
+            text-align: center;
+            letter-spacing: 0.5px;
+            border: 1px solid #7f9db9;
+        }
+
+        td {
+            border: 1px solid #b5b59a;
+            height: 24px; /* Altura idéntica para simular las filas vacías */
+        }
+
+        /* Anchos proporcionales de columnas según imagen */
+        th:nth-child(1), td:nth-child(1) { width: 25%; } /* UNIDAD */
+        th:nth-child(2), td:nth-child(2) { width: 50%; } /* DESCRIPCION */
+        th:nth-child(3), td:nth-child(3) { width: 25%; } /* CIUDAD */
+
+        /* Contenedor enmarcado de la botonera inferior */
+        .footer-action-box {
+            border: 1px solid #a0b8d9;
+            border-radius: 10px;
+            padding: 12px;
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.8);
+        }
+
+        /* Botones de control con relieve azul/metálico */
+        .btn-control {
+            min-width: 105px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffffff;
+            background: linear-gradient(to bottom, #417394, #0b2e46);
+            border: 1px solid #10263c;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3), inset 0px 1px 0px rgba(255,255,255,0.3);
+            outline: none;
+        }
+
+        .btn-control:hover {
+            background: linear-gradient(to bottom, #528cb3, #114263);
+        }
+
+        /* Enfoque punteado en el botón seleccionado por defecto (Nuevo) */
+        .btn-control.focus-default {
+            outline: 1px dashed #ffffff;
+            outline-offset: -3px;
+        }
+
+        .btn-control:disabled {
+            background: linear-gradient(to bottom, #999999, #666666);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window-container">
+        <header>Unidad Administrativa</header>
+        
+        <div class="main-title">ADMINISTRACION UNIDAD ADMINISTRATIVA</div>
+
+        <main>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>UNIDAD</th>
+                            <th>DESCRIPCION</th>
+                            <th>CIUDAD</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer-action-box">
+                <button class="btn-control focus-default" id="btn-nuevo">Nuevo</button>
+                <button class="btn-control" id="btn-editar">Editar</button>
+                <button class="btn-control" id="btn-eliminar">Eliminar</button>
+                <button class="btn-control" id="btn-seleccionar">Seleccionar</button>
+                <button class="btn-control" id="btn-salir">Salir</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // URLs de la API
+        const API_BASE_URL = "https://fuerza-g-grupo-1-uy0x.onrender.com";
+        const API_UNIDADES = `${API_BASE_URL}/unidadadmin`;
+
+        const tablaBody = document.getElementById("tabla-body");
+        const btnNuevo = document.getElementById("btn-nuevo");
+        const btnEditar = document.getElementById("btn-editar");
+        const btnEliminar = document.getElementById("btn-eliminar");
+        const btnSeleccionar = document.getElementById("btn-seleccionar");
+        const btnSalir = document.getElementById("btn-salir");
+
+        let unidades = [];
+        let filaSeleccionada = null;
+        let modoEdicion = false;
+        let unidadOriginal = null;
+
+        // Función para cargar las unidades desde la API
+        async function cargarUnidades() {
+            try {
+                const response = await fetch(API_UNIDADES);
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                const rawData = await response.json();
+                
+                // Mapear datos del API a la estructura esperada
+                // UnidadAdmin schema: {entidad, unidad, descrip, ciudad}
+                if (rawData.length > 0) {
+                    unidades = rawData.map(item => ({
+                        entidad: item.entidad,
+                        unidad: item.unidad,
+                        descripcion: item.descrip || "",
+                        ciudad: item.ciudad || ""
+                    }));
+                } else {
+                    unidades = [];
+                }
+                
+                renderizarTabla();
+            } catch (error) {
+                console.error("Error al cargar unidades:", error);
+                alert("Error: No se pudo conectar con la API. Verifique la conexión.");
+                unidades = [];
+                renderizarTabla();
+            }
+        }
+
+        // Función para renderizar la tabla
+        function renderizarTabla() {
+            tablaBody.innerHTML = "";
+            
+            if (unidades.length === 0) {
+                // Mostrar filas vacías si no hay datos
+                for (let i = 0; i < 8; i++) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `<td></td><td></td><td></td>`;
+                    tablaBody.appendChild(row);
+                }
+                return;
+            }
+
+            unidades.forEach((unidad, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${unidad.unidad}</td>
+                    <td>${unidad.descripcion}</td>
+                    <td>${unidad.ciudad}</td>
+                `;
+                row.addEventListener("click", () => seleccionarFila(index));
+                tablaBody.appendChild(row);
+            });
+        }
+
+        // Función para seleccionar una fila
+        function seleccionarFila(index) {
+            // Remover selección anterior
+            if (filaSeleccionada !== null) {
+                tablaBody.children[filaSeleccionada].style.backgroundColor = "";
+            }
+            
+            // Seleccionar nueva fila
+            filaSeleccionada = index;
+            tablaBody.children[index].style.backgroundColor = "#ffff99";
+            
+            // Habilitar botones
+            btnEditar.disabled = false;
+            btnEliminar.disabled = false;
+            btnSeleccionar.disabled = false;
+        }
+
+        // Función Nuevo
+        function nuevo() {
+            modoEdicion = true;
+            unidadOriginal = null;
+            filaSeleccionada = null;
+            
+            // Limpiar selección
+            Array.from(tablaBody.children).forEach(row => {
+                row.style.backgroundColor = "";
+            });
+            
+            // Deshabilitar botones
+            btnNuevo.disabled = true;
+            btnEditar.disabled = true;
+            btnEliminar.disabled = true;
+            btnSeleccionar.disabled = true;
+            
+            alert("Modo nuevo activado. Use la API para crear una nueva unidad.");
+        }
+
+        // Función Editar
+        function editar() {
+            if (filaSeleccionada === null) {
+                alert("Seleccione una unidad para editar");
+                return;
+            }
+            
+            modoEdicion = true;
+            unidadOriginal = {...unidades[filaSeleccionada]};
+            
+            btnNuevo.disabled = true;
+            btnEditar.disabled = true;
+            btnEliminar.disabled = true;
+            btnSeleccionar.disabled = true;
+            
+            alert("Modo edición activado para: " + unidades[filaSeleccionada].descripcion);
+        }
+
+        // Función Eliminar
+        async function eliminar() {
+            if (filaSeleccionada === null) {
+                alert("Seleccione una unidad para eliminar");
+                return;
+            }
+            
+            if (!confirm("¿Está seguro de eliminar esta unidad?")) return;
+
+            try {
+                const posicion = filaSeleccionada;
+                const response = await fetch(`${API_UNIDADES}/${posicion}`, {
+                    method: "DELETE"
+                });
+                if (!response.ok) throw new Error("Error al eliminar");
+                
+                unidades.splice(filaSeleccionada, 1);
+                filaSeleccionada = null;
+                renderizarTabla();
+                
+                // Deshabilitar botones
+                btnEditar.disabled = true;
+                btnEliminar.disabled = true;
+                btnSeleccionar.disabled = true;
+                
+                alert("Eliminado exitosamente");
+            } catch (error) {
+                console.error("Error al eliminar:", error);
+                alert("Error: No se pudo eliminar en la API. Verifique la conexión.");
+            }
+        }
+
+        // Función Seleccionar
+        function seleccionar() {
+            if (filaSeleccionada === null) {
+                alert("Seleccione una unidad primero");
+                return;
+            }
+            
+            const unidad = unidades[filaSeleccionada];
+            alert("Unidad seleccionada: " + unidad.descripcion);
+            
+            // Aquí podrías enviar el dato al padre si es necesario
+            if (window.parent !== window) {
+                window.parent.postMessage({ 
+                    type: 'unidad-seleccionada', 
+                    unidad: unidad 
+                }, '*');
+            }
+        }
+
+        // Función Salir
+        function salir() {
+            if (modoEdicion) {
+                if (confirm("Hay cambios sin guardar. ¿Desea salir?")) {
+                    if (window.parent !== window) {
+                        window.parent.postMessage({ type: 'close-modal' }, '*');
+                    } else {
+                        window.close();
+                    }
+                }
+            } else {
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'close-modal' }, '*');
+                } else {
+                    window.close();
+                }
+            }
+        }
+
+        // Event listeners
+        btnNuevo.addEventListener("click", nuevo);
+        btnEditar.addEventListener("click", editar);
+        btnEliminar.addEventListener("click", eliminar);
+        btnSeleccionar.addEventListener("click", seleccionar);
+        btnSalir.addEventListener("click", salir);
+
+        // Ejecutar al cargar el documento
+        document.addEventListener("DOMContentLoaded", cargarUnidades);
+    </script>
+    <script src="../../../../js/iframe-resize.js"></script>
+    <script src="../../../../js/modal-close.js"></script>
+</body>
+</html>
