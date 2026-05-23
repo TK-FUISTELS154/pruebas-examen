@@ -3,8 +3,8 @@ const passInput = document.getElementById('login-password');
 const loginBtn = document.getElementById('login-confirm');
 const salirBtn = document.getElementById('login-salir');
 
-// URL de GitHub Pages para el archivo JSON de usuarios
-const GITHUB_JSON_URL = "https://tk-fuistels154.github.io/pruebas-examen/assets/dataBase/user.json";
+// URL raw de GitHub para el archivo JSON de usuarios
+const GITHUB_JSON_URL = "https://raw.githubusercontent.com/TK-FUISTELS154/pruebas-examen/dev/assets/dataBase/user.json";
 
 // Cargar users desde GitHub JSON
 let users = [];
