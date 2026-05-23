@@ -42,6 +42,7 @@ async function cargarGrupos() {
         const rawData = await response.json();
         
         // Mapear datos del nuevo API a la estructura esperada
+        // ObjGasto schema: {gestion, partida, descrip}
         if (rawData.length > 0) {
             gruposContables = rawData.map(item => ({
                 idGrupo: item.gestion || item.partida || 1,

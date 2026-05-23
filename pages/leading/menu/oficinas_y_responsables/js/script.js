@@ -69,7 +69,7 @@ async function cargarEstados() {
     }
 }
 
-// Función para cargar las oficinas desde la API
+// Función para cargar los oficinas desde la API
 async function cargarOficinas() {
     try {
         await cargarEstados();
@@ -80,6 +80,7 @@ async function cargarOficinas() {
         const rawData = await response.json();
         
         // Mapear datos del nuevo API a la estructura esperada
+        // UnidadAdmin schema: {entidad, unidad, descrip, ciudad}
         oficinas = rawData.map(item => ({
             idOficina: item.unidad.toString(),
             nombreOficina: item.descrip || "UNIDAD ADMINISTRATIVA",
@@ -99,12 +100,12 @@ async function cargarOficinas() {
 // Función para obtener el nombre del estado por ID
 function getNombreEstado(idEstado) {
     const estado = estados.find(e => e.codestado === idEstado);
-    return estado ? estado.nomestado : "DESCONOCIDO";
+    return estado ? estado.nombrestado : "DESCONOCIDO";
 }
 
 // Función para obtener el ID del estado por nombre
 function getIdEstado(nombreEstado) {
-    const estado = estados.find(e => e.nomestado === nombreEstado);
+    const estado = estados.find(e => e.nombrestado === nombreEstado);
     return estado ? estado.codestado : 1;
 }
 
