@@ -2,13 +2,35 @@ const userInput = document.getElementById('login-username');
 const passInput = document.getElementById('login-password');
 const loginBtn = document.getElementById('login-confirm');
 
+// Cargar users desde user.js usando fetch
+let users = [];
+
+async function cargarUsers() {
+    try {
+        const response = await fetch('assets/dataBase/user.js');
+        if (!response.ok) throw new Error('No se pudo cargar user.js');
+        const jsContent = await response.text();
+        
+        // Evaluar el contenido JavaScript para obtener la variable users
+        eval(jsContent);
+        
+        console.log('users cargado correctamente:', users);
+        return true;
+    } catch (error) {
+        console.error('Error al cargar users:', error);
+        // Usar datos de prueba como fallback
+        users = [
+            { username: "admin", password: "admin", rol: "admin" },
+            { username: "user", password: "user", rol: "user" }
+        ];
+        console.log('Usando datos de prueba:', users);
+        return false;
+    }
+}
+
 function ejecutarLogin() {
     const usernameInput = userInput.value;
     const passwordInput = passInput.value;
-
-    // Debug: verificar si users está disponible
-    console.log('Debug - users disponible:', typeof users !== 'undefined');
-    console.log('Debug - users:', users);
 
     // Usar la variable global 'users' desde user.js
     if (typeof users !== 'undefined' && users.length > 0) {
@@ -35,6 +57,9 @@ function ejecutarLogin() {
         alert("Error: No se pudo cargar la base de datos de usuarios");
     }
 }
+
+// Cargar users al iniciar la página
+cargarUsers();
 
 
 userInput.addEventListener('keydown', function (event) {
