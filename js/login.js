@@ -6,6 +6,10 @@ function ejecutarLogin() {
     const usernameInput = userInput.value;
     const passwordInput = passInput.value;
 
+    // Debug: verificar si users está disponible
+    console.log('Debug - users disponible:', typeof users !== 'undefined');
+    console.log('Debug - users:', users);
+
     // Usar la variable global 'users' desde user.js
     if (typeof users !== 'undefined' && users.length > 0) {
         const usuarioEncontrado = users.find(user =>
@@ -27,6 +31,7 @@ function ejecutarLogin() {
             alert("Usuario o contraseña incorrectos");
         }
     } else {
+        console.error('Error: users no está definido o está vacío');
         alert("Error: No se pudo cargar la base de datos de usuarios");
     }
 }
