@@ -277,7 +277,15 @@
             btnEliminar.disabled = true;
             btnSeleccionar.disabled = true;
             
-            alert("Modo nuevo activado. Use la API para crear una nueva unidad.");
+            // Abrir modal para crear nueva unidad
+            if (window.parent !== window) {
+                window.parent.postMessage({ 
+                    type: 'open-modal', 
+                    url: 'nuevo.html' 
+                }, '*');
+            } else {
+                window.open('nuevo.html', '_blank');
+            }
         }
 
         // Función Editar
@@ -295,7 +303,23 @@
             btnEliminar.disabled = true;
             btnSeleccionar.disabled = true;
             
-            alert("Modo edición activado para: " + unidades[filaSeleccionada].descripcion);
+            // Abrir modal para editar unidad con parámetros
+            const unidad = unidades[filaSeleccionada];
+            const params = new URLSearchParams({
+                id: filaSeleccionada.toString(),
+                unidad: unidad.unidad.toString(),
+                ciudad: unidad.ciudad,
+                descripcion: unidad.descripcion
+            });
+            
+            if (window.parent !== window) {
+                window.parent.postMessage({ 
+                    type: 'open-modal', 
+                    url: 'nuevo.html?' + params.toString() 
+                }, '*');
+            } else {
+                window.open('nuevo.html?' + params.toString(), '_blank');
+            }
         }
 
         // Función Eliminar
@@ -374,6 +398,13 @@
         btnEliminar.addEventListener("click", eliminar);
         btnSeleccionar.addEventListener("click", seleccionar);
         btnSalir.addEventListener("click", salir);
+
+        // Escuchar mensajes de otros modales
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'recargar-unidades') {
+                cargarUnidades();
+            }
+        });
 
         // Ejecutar al cargar el documento
         document.addEventListener("DOMContentLoaded", cargarUnidades);

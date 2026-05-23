@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad Administrativa - Detalle</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #dcdcdc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* Ventana con doble borde clásico de sistema de escritorio */
+        .window-container {
+            width: 680px;
+            background-color: #f0f0f0;
+            border: 2px solid #ffffff;
+            outline: 2px solid #999999;
+            box-shadow: 3px 3px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Encabezados y barras de título con degradados */
+        header {
+            background: linear-gradient(to right, #99b4d1, #b8d0e9);
+            padding: 5px 10px;
+            color: #000;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #6384a3;
+        }
+
+        .main-title {
+            background: linear-gradient(to bottom, #3372a5, #1b3750);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Cuerpo interno del formulario */
+        main {
+            padding: 25px;
+        }
+
+        /* Panel contenedor interno enmarcado */
+        .form-box {
+            border: 1px solid #999999;
+            background-color: #f7f9fc;
+            padding: 25px 30px;
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 16px 15px;
+            align-items: center;
+        }
+
+        /* Etiquetas de texto lateral azul */
+        .label-text {
+            font-size: 14px;
+            color: #104e8b;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        /* Inputs y Textarea estilo Win98/WinXP */
+        input[type="text"], textarea {
+            background-color: #ffffff;
+            border: 1px solid #7f9db9;
+            padding: 4px 6px;
+            font-size: 14px;
+            outline: none;
+            color: #000;
+            width: 100%;
+        }
+
+        /* Input pequeño para el código de Unidad */
+        input.small-input {
+            width: 120px;
+        }
+
+        /* Caja de texto de descripción más grande */
+        textarea {
+            height: 80px;
+            resize: none;
+        }
+
+        /* Caja inferior para agrupar los botones de acción */
+        .footer-bar {
+            margin-top: 15px;
+            border: 1px solid #d4d4d4;
+            background-color: #eaeaea;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Botones de control con relieve metálico */
+        .btn-control {
+            min-width: 100px;
+            padding: 5px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffffff;
+            background: linear-gradient(to bottom, #417394, #0b2e46);
+            border: 1px solid #10263c;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3), inset 0px 1px 0px rgba(255,255,255,0.3);
+            outline: none;
+        }
+
+        .btn-control:hover {
+            background: linear-gradient(to bottom, #528cb3, #114263);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window-container">
+        <header>Unidad Administrativa</header>
+        
+        <div class="main-title">UNIDAD ADMINISTRATIVA</div>
+
+        <main>
+            <div class="form-box">
+                <div class="label-text">Unidad Administrativa:</div>
+                <div>
+                    <input type="text" class="small-input" id="txt-unidad-id" value="">
+                </div>
+
+                <div class="label-text">Ciudad:</div>
+                <div>
+                    <input type="text" id="txt-ciudad" value="">
+                </div>
+
+                <div class="label-text" style="align-self: start; padding-top: 4px;">Descripción:</div>
+                <div>
+                    <textarea id="txt-descripcion"></textarea>
+                </div>
+            </div>
+
+            <div class="footer-bar">
+                <button class="btn-control" id="btn-grabar"><u>G</u>rabar</button>
+                <button class="btn-control" id="btn-salir"><u>S</u>alir</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // URLs de la API
+        const API_BASE_URL = "https://fuerza-g-grupo-1-uy0x.onrender.com";
+        const API_UNIDADES = `${API_BASE_URL}/unidadadmin`;
+
+        const txtUnidadId = document.getElementById("txt-unidad-id");
+        const txtCiudad = document.getElementById("txt-ciudad");
+        const txtDescripcion = document.getElementById("txt-descripcion");
+        const btnGrabar = document.getElementById("btn-grabar");
+        const btnSalir = document.getElementById("btn-salir");
+
+        let modoEdicion = false;
+        let unidadOriginal = null;
+
+        // Obtener parámetros de URL para modo edición
+        function obtenerParametros() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const unidad = params.get('unidad');
+            const ciudad = params.get('ciudad');
+            const descripcion = params.get('descripcion');
+            
+            if (id || unidad) {
+                modoEdicion = true;
+                unidadOriginal = { id, unidad, ciudad, descripcion };
+                
+                txtUnidadId.value = unidad || "";
+                txtCiudad.value = ciudad || "";
+                txtDescripcion.value = descripcion || "";
+                
+                if (id) {
+                    txtUnidadId.readOnly = true;
+                }
+            }
+        }
+
+        // Función Grabar
+        async function grabar() {
+            const unidad = txtUnidadId.value.trim();
+            const ciudad = txtCiudad.value.trim();
+            const descripcion = txtDescripcion.value.trim();
+
+            if (!unidad) {
+                alert("Por favor ingrese la unidad administrativa");
+                txtUnidadId.focus();
+                return;
+            }
+
+            const apiData = {
+                entidad: 1,
+                unidad: parseInt(unidad),
+                descrip: descripcion,
+                ciudad: ciudad
+            };
+
+            try {
+                if (modoEdicion && unidadOriginal.id) {
+                    // Actualizar existente (PUT) usando posición
+                    const posicion = parseInt(unidadOriginal.id);
+                    const response = await fetch(`${API_UNIDADES}/${posicion}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(apiData)
+                    });
+                    if (!response.ok) throw new Error("Error al actualizar");
+                    alert("Actualizado exitosamente");
+                } else {
+                    // Crear nuevo (POST)
+                    const response = await fetch(API_UNIDADES, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(apiData)
+                    });
+                    if (!response.ok) throw new Error("Error al crear");
+                    alert("Creado exitosamente");
+                }
+                
+                // Cerrar modal y recargar lista
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'recargar-unidades' }, '*');
+                    window.parent.postMessage({ type: 'close-modal' }, '*');
+                } else {
+                    window.close();
+                }
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                alert("Error: No se pudo guardar en la API. Verifique la conexión.");
+            }
+        }
+
+        // Función Salir
+        function salir() {
+            if (txtUnidadId.value || txtCiudad.value || txtDescripcion.value) {
+                if (confirm("Hay cambios sin guardar. ¿Desea salir?")) {
+                    if (window.parent !== window) {
+                        window.parent.postMessage({ type: 'close-modal' }, '*');
+                    } else {
+                        window.close();
+                    }
+                }
+            } else {
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'close-modal' }, '*');
+                } else {
+                    window.close();
+                }
+            }
+        }
+
+        // Event listeners
+        btnGrabar.addEventListener("click", grabar);
+        btnSalir.addEventListener("click", salir);
+
+        // Ejecutar al cargar el documento
+        document.addEventListener("DOMContentLoaded", obtenerParametros);
+    </script>
+    <script src="../../../../js/iframe-resize.js"></script>
+    <script src="../../../../js/modal-close.js"></script>
+</body>
+</html>
