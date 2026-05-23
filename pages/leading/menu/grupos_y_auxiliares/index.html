@@ -82,10 +82,37 @@
         </main>
     </div>
 
+    <!-- Popup para Cuenta Partida -->
+    <div class="popup-overlay" id="popup-ctapar-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="popup-content" style="background-color: #f0f0f0; border: 2px solid #7a96df; border-radius: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); width: 450px; max-height: 90vh; overflow-y: auto;">
+            <div class="popup-header" style="background: linear-gradient(to right, #99b4d1, #b8d0e9); padding: 5px 10px; color: #000; font-size: 13px; font-weight: bold; border-bottom: 1px solid #6384a3;">Cuenta Partida</div>
+            <div class="popup-title" style="background: linear-gradient(to bottom, #3372a5, #1b3750); color: white; text-align: center; padding: 10px; font-size: 16px; font-weight: bold; letter-spacing: 1px;">CUENTA PARTIDA</div>
+            <div class="popup-body" style="padding: 25px;">
+                <div class="popup-form-box" style="border: 1px solid #999999; background-color: #f7f9fc; padding: 25px 30px; display: grid; grid-template-columns: 120px 1fr; gap: 16px 15px; align-items: center;">
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left;">Codcont:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-ctapar-codcont" value="" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%;">
+                    </div>
+
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left;">Descripción:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-ctapar-descripcion" value="" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%;">
+                    </div>
+                </div>
+
+                <div class="popup-footer" style="margin-top: 15px; border: 1px solid #d4d4d4; background-color: #eaeaea; padding: 8px 20px; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button class="btn" id="popup-ctapar-grabar" style="padding: 5px 20px;">Grabar</button>
+                    <button class="btn" id="popup-ctapar-salir" style="padding: 5px 20px;">Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // URLs de la API
         const API_BASE_URL = "https://fuerza-g-grupo-1-uy0x.onrender.com";
         const API_GRUPOS = `${API_BASE_URL}/api/objgasto`;
+        const API_CTA_PAR = `${API_BASE_URL}/api/Cta_par`;
 
         const selectNombre = document.getElementById("select-nombre");
         const inputGrupo = document.getElementById("input-grupo");
@@ -93,6 +120,73 @@
         const txtObservaciones = document.getElementById("txt-observaciones");
         const chkDeprecia = document.getElementById("chk-deprecia");
         const chkActualiza = document.getElementById("chk-actualiza");
+
+        // Elementos del popup Cta_par
+        const popupCtaParOverlay = document.getElementById("popup-ctapar-overlay");
+        const popupCtaParCodcont = document.getElementById("popup-ctapar-codcont");
+        const popupCtaParDescripcion = document.getElementById("popup-ctapar-descripcion");
+        const btnPopupCtaParGrabar = document.getElementById("popup-ctapar-grabar");
+        const btnPopupCtaParSalir = document.getElementById("popup-ctapar-salir");
+
+        let ctaPar = [];
+
+        // Funciones para Cuenta Partida
+        async function cargarCtaPar() {
+            try {
+                const response = await fetch(API_CTA_PAR);
+                if (!response.ok) throw new Error("Error al cargar cuentas partida");
+                ctaPar = await response.json();
+            } catch (error) {
+                console.error("Error al cargar cuentas partida:", error);
+            }
+        }
+
+        function mostrarPopupCtaPar() {
+            popupCtaParOverlay.style.display = "flex";
+        }
+
+        function ocultarPopupCtaPar() {
+            popupCtaParOverlay.style.display = "none";
+        }
+
+        async function grabarPopupCtaPar() {
+            const codcont = popupCtaParCodcont.value.trim();
+            const descripcion = popupCtaParDescripcion.value.trim();
+
+            if (!codcont || !descripcion) {
+                alert("Por favor complete todos los campos");
+                return;
+            }
+
+            const apiData = {
+                Codcont: codcont,
+                descripcion: descripcion
+            };
+
+            try {
+                const response = await fetch(API_CTA_PAR, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(apiData)
+                });
+                if (!response.ok) throw new Error("Error al crear cuenta partida");
+                alert("Cuenta partida creada exitosamente");
+                await cargarCtaPar();
+                ocultarPopupCtaPar();
+            } catch (error) {
+                console.error("Error al guardar cuenta partida:", error);
+                alert("Error: No se pudo guardar en la API");
+            }
+        }
+
+        // Event listeners para popup Cta_par
+        btnPopupCtaParGrabar.addEventListener("click", grabarPopupCtaPar);
+        btnPopupCtaParSalir.addEventListener("click", ocultarPopupCtaPar);
+
+        // Cerrar popup al hacer clic fuera
+        popupCtaParOverlay.addEventListener("click", (e) => {
+            if (e.target === popupCtaParOverlay) ocultarPopupCtaPar();
+        });
 
         // Botones
         const btnNuevo = document.querySelector(".button-bar button:nth-child(1)");
@@ -355,7 +449,10 @@
         btnSalir.addEventListener("click", salir);
 
         // Ejecutar al cargar el documento
-        document.addEventListener("DOMContentLoaded", cargarGrupos);
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarGrupos();
+            cargarCtaPar();
+        });
     </script>
     <script src="../../../../js/iframe-resize.js"></script>
     <script src="../../../../js/modal-close.js"></script>

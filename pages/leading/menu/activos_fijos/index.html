@@ -1,11 +1,365 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activos Fijos</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Activos Fijos</h1>
+
+    <div class="window-container">
+        <header>ACTIVOS FIJOS</header>
+        
+        <div class="sub-header">
+            <div>UNIDAD: UFV 2026</div>
+        </div>
+
+        <div class="main-title">BAJAS DE ACTIVOS</div>
+
+        <main>
+            <div class="form-container">
+                <div class="left-inputs">
+                    <div>ID Baja:</div>
+                    <input type="text" id="input-baja-id" class="center-text" value="" readonly>
+                    
+                    <div>Fecha:</div>
+                    <input type="text" id="input-fecha" class="center-text" value="">
+                </div>
+
+                <div class="right-inputs">
+                    <div>Motivo:</div>
+                    <textarea id="txt-motivo"></textarea>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>FECHA</th>
+                            <th>MOTIVO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="button-bar">
+                <button class="btn" id="btn-nuevo">Nuevo</button>
+                <button class="btn" id="btn-modificar">Modificar</button>
+                <button class="btn disabled" disabled id="btn-guardar">Guardar</button>
+                <button class="btn" id="btn-eliminar">Eliminar</button>
+                <button class="btn disabled" disabled id="btn-deshacer">Deshacer</button>
+                <button class="btn" id="btn-salir">Salir</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Popup para Bajas -->
+    <div class="popup-overlay" id="popup-baja-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="popup-content" style="background-color: #f0f0f0; border: 2px solid #7a96df; border-radius: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="popup-header" style="background: linear-gradient(to right, #99b4d1, #b8d0e9); padding: 5px 10px; color: #000; font-size: 13px; font-weight: bold; border-bottom: 1px solid #6384a3;">Bajas</div>
+            <div class="popup-title" style="background: linear-gradient(to bottom, #3372a5, #1b3750); color: white; text-align: center; padding: 10px; font-size: 16px; font-weight: bold; letter-spacing: 1px;">BAJAS DE ACTIVOS</div>
+            <div class="popup-body" style="padding: 25px;">
+                <div class="popup-form-box" style="border: 1px solid #999999; background-color: #f7f9fc; padding: 25px 30px; display: grid; grid-template-columns: 100px 1fr; gap: 16px 15px; align-items: center;">
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left;">ID:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-baja-id" value="" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%;">
+                    </div>
+
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left;">Fecha:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-baja-fecha" value="" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%;">
+                    </div>
+
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left; align-self: start; padding-top: 4px;">Motivo:</div>
+                    <div>
+                        <textarea class="popup-textarea" id="popup-baja-motivo" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%; height: 80px; resize: none;"></textarea>
+                    </div>
+                </div>
+
+                <div class="popup-footer" style="margin-top: 15px; border: 1px solid #d4d4d4; background-color: #eaeaea; padding: 8px 20px; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button class="btn" id="popup-baja-grabar" style="padding: 5px 20px;">Grabar</button>
+                    <button class="btn" id="popup-baja-salir" style="padding: 5px 20px;">Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URLs de la API
+        const API_BASE_URL = "https://fuerza-g-grupo-1-uy0x.onrender.com";
+        const API_BAJAS = `${API_BASE_URL}/api/baja`;
+
+        // Elementos del DOM
+        const tablaBody = document.getElementById("tabla-body");
+        const inputBajaId = document.getElementById("input-baja-id");
+        const inputFecha = document.getElementById("input-fecha");
+        const txtMotivo = document.getElementById("txt-motivo");
+
+        // Botones
+        const btnNuevo = document.getElementById("btn-nuevo");
+        const btnModificar = document.getElementById("btn-modificar");
+        const btnGuardar = document.getElementById("btn-guardar");
+        const btnEliminar = document.getElementById("btn-eliminar");
+        const btnDeshacer = document.getElementById("btn-deshacer");
+        const btnSalir = document.getElementById("btn-salir");
+
+        // Elementos del popup
+        const popupBajaOverlay = document.getElementById("popup-baja-overlay");
+        const popupBajaId = document.getElementById("popup-baja-id");
+        const popupBajaFecha = document.getElementById("popup-baja-fecha");
+        const popupBajaMotivo = document.getElementById("popup-baja-motivo");
+        const btnPopupBajaGrabar = document.getElementById("popup-baja-grabar");
+        const btnPopupBajaSalir = document.getElementById("popup-baja-salir");
+
+        let bajas = [];
+        let filaSeleccionada = null;
+        let modoEdicion = false;
+        let bajaOriginal = null;
+
+        // Cargar bajas desde la API
+        async function cargarBajas() {
+            try {
+                const response = await fetch(API_BAJAS);
+                if (!response.ok) throw new Error("Error al cargar bajas");
+                bajas = await response.json();
+                renderizarTabla();
+            } catch (error) {
+                console.error("Error al cargar bajas:", error);
+                alert("Error: No se pudo cargar las bajas de la API");
+            }
+        }
+
+        // Renderizar tabla
+        function renderizarTabla() {
+            tablaBody.innerHTML = "";
+            bajas.forEach((baja, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${baja.id || ""}</td>
+                    <td>${baja.fecha || ""}</td>
+                    <td>${baja.motivo || ""}</td>
+                `;
+                row.addEventListener("click", () => seleccionarFila(index));
+                tablaBody.appendChild(row);
+            });
+        }
+
+        // Seleccionar fila
+        function seleccionarFila(index) {
+            // Remover selección anterior
+            if (filaSeleccionada !== null) {
+                tablaBody.children[filaSeleccionada].style.backgroundColor = "";
+            }
+            
+            // Seleccionar nueva fila
+            filaSeleccionada = index;
+            tablaBody.children[index].style.backgroundColor = "#ffff99";
+            
+            // Habilitar botones
+            btnModificar.disabled = false;
+            btnEliminar.disabled = false;
+            
+            // Cargar datos en el formulario
+            const baja = bajas[index];
+            inputBajaId.value = baja.id || "";
+            inputFecha.value = baja.fecha || "";
+            txtMotivo.value = baja.motivo || "";
+        }
+
+        // Función Nuevo
+        function nuevo() {
+            modoEdicion = true;
+            bajaOriginal = null;
+            filaSeleccionada = null;
+            
+            // Limpiar selección
+            Array.from(tablaBody.children).forEach(row => {
+                row.style.backgroundColor = "";
+            });
+            
+            // Deshabilitar botones
+            btnNuevo.disabled = true;
+            btnModificar.disabled = true;
+            btnEliminar.disabled = true;
+            
+            // Limpiar campos del popup
+            popupBajaId.value = "";
+            popupBajaFecha.value = "";
+            popupBajaMotivo.value = "";
+            popupBajaId.readOnly = false;
+            
+            // Mostrar popup
+            popupBajaOverlay.style.display = "flex";
+        }
+
+        // Función Modificar
+        function modificar() {
+            if (filaSeleccionada === null) {
+                alert("Seleccione una baja para modificar");
+                return;
+            }
+            
+            modoEdicion = true;
+            bajaOriginal = {...bajas[filaSeleccionada]};
+            
+            btnNuevo.disabled = true;
+            btnModificar.disabled = true;
+            btnEliminar.disabled = true;
+            
+            // Cargar datos en el popup
+            const baja = bajas[filaSeleccionada];
+            popupBajaId.value = baja.id || "";
+            popupBajaFecha.value = baja.fecha || "";
+            popupBajaMotivo.value = baja.motivo || "";
+            popupBajaId.readOnly = true;
+            
+            // Mostrar popup
+            popupBajaOverlay.style.display = "flex";
+        }
+
+        // Función Eliminar
+        async function eliminar() {
+            if (filaSeleccionada === null) {
+                alert("Seleccione una baja para eliminar");
+                return;
+            }
+            
+            if (!confirm("¿Está seguro de eliminar esta baja?")) return;
+
+            try {
+                const id = bajas[filaSeleccionada].id;
+                const response = await fetch(`${API_BAJAS}/${id}`, {
+                    method: "DELETE"
+                });
+                if (!response.ok) throw new Error("Error al eliminar");
+                
+                bajas.splice(filaSeleccionada, 1);
+                filaSeleccionada = null;
+                renderizarTabla();
+                
+                // Deshabilitar botones
+                btnModificar.disabled = true;
+                btnEliminar.disabled = true;
+                
+                alert("Eliminado exitosamente");
+            } catch (error) {
+                console.error("Error al eliminar:", error);
+                alert("Error: No se pudo eliminar en la API. Verifique la conexión.");
+            }
+        }
+
+        // Función Salir
+        function salir() {
+            if (modoEdicion) {
+                if (confirm("Hay cambios sin guardar. ¿Desea salir?")) {
+                    if (window.parent !== window) {
+                        window.parent.postMessage({ type: 'close-modal' }, '*');
+                    } else {
+                        window.close();
+                    }
+                }
+            } else {
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'close-modal' }, '*');
+                } else {
+                    window.close();
+                }
+            }
+        }
+
+        // Funciones del popup
+        async function grabarPopup() {
+            const id = popupBajaId.value.trim();
+            const fecha = popupBajaFecha.value.trim();
+            const motivo = popupBajaMotivo.value.trim();
+
+            if (!id || !fecha) {
+                alert("Por favor ingrese ID y fecha");
+                return;
+            }
+
+            const apiData = {
+                id: parseInt(id),
+                fecha: fecha,
+                motivo: motivo
+            };
+
+            try {
+                if (modoEdicion && bajaOriginal) {
+                    // Actualizar existente (PUT)
+                    const response = await fetch(`${API_BAJAS}/${apiData.id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(apiData)
+                    });
+                    if (!response.ok) throw new Error("Error al actualizar");
+                    alert("Actualizado exitosamente");
+                } else {
+                    // Crear nuevo (POST)
+                    const response = await fetch(API_BAJAS, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(apiData)
+                    });
+                    if (!response.ok) throw new Error("Error al crear");
+                    alert("Creado exitosamente");
+                }
+                
+                await cargarBajas();
+                ocultarPopup();
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                alert("Error: No se pudo guardar en la API. Verifique la conexión.");
+            }
+        }
+
+        function ocultarPopup() {
+            popupBajaOverlay.style.display = "none";
+            modoEdicion = false;
+            bajaOriginal = null;
+            filaSeleccionada = null;
+            
+            btnNuevo.disabled = false;
+            btnModificar.disabled = false;
+            btnEliminar.disabled = false;
+            
+            Array.from(tablaBody.children).forEach(row => {
+                row.style.backgroundColor = "";
+            });
+        }
+
+        function salirPopup() {
+            if (popupBajaId.value || popupBajaFecha.value || popupBajaMotivo.value) {
+                if (confirm("Hay cambios sin guardar. ¿Desea salir?")) {
+                    ocultarPopup();
+                }
+            } else {
+                ocultarPopup();
+            }
+        }
+
+        // Event listeners
+        btnNuevo.addEventListener("click", nuevo);
+        btnModificar.addEventListener("click", modificar);
+        btnEliminar.addEventListener("click", eliminar);
+        btnSalir.addEventListener("click", salir);
+        btnPopupBajaGrabar.addEventListener("click", grabarPopup);
+        btnPopupBajaSalir.addEventListener("click", salirPopup);
+
+        // Cerrar popup al hacer clic fuera
+        popupBajaOverlay.addEventListener("click", (e) => {
+            if (e.target === popupBajaOverlay) salirPopup();
+        });
+
+        // Cargar datos al iniciar
+        document.addEventListener("DOMContentLoaded", cargarBajas);
+    </script>
+    <script src="../../../../js/iframe-resize.js"></script>
+    <script src="../../../../js/modal-close.js"></script>
 </body>
 </html>

@@ -86,8 +86,8 @@
                     <input type="text" class="center-text" value="23">
                     
                     <span>Mes:</span>
-                    <input type="text" class="center-text" value="05">
-                    <span style="color: #000; font-weight: normal; margin-left: 5px;">MAYO</span>
+                    <input type="text" class="center-text" value="05" id="input-mes">
+                    <span style="color: #000; font-weight: normal; margin-left: 5px;" id="span-mes-nombre">MAYO</span>
 
                     <span style="margin-left: 15px;">Año:</span>
                     <input type="text" id="txt-año" class="center-text" value="2026">
@@ -107,7 +107,218 @@
         </main>
     </div>
 
+    <!-- Popup para Meses -->
+    <div class="popup-overlay" id="popup-mes-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="popup-content" style="background-color: #f0f0f0; border: 2px solid #7a96df; border-radius: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); width: 400px; max-height: 90vh; overflow-y: auto;">
+            <div class="popup-header" style="background: linear-gradient(to right, #99b4d1, #b8d0e9); padding: 5px 10px; color: #000; font-size: 13px; font-weight: bold; border-bottom: 1px solid #6384a3;">Meses</div>
+            <div class="popup-title" style="background: linear-gradient(to bottom, #3372a5, #1b3750); color: white; text-align: center; padding: 10px; font-size: 16px; font-weight: bold; letter-spacing: 1px;">MESES</div>
+            <div class="popup-body" style="padding: 25px;">
+                <div class="popup-form-box" style="border: 1px solid #999999; background-color: #f7f9fc; padding: 25px 30px; display: grid; grid-template-columns: 100px 1fr; gap: 16px 15px; align-items: center;">
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left;">ID:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-mes-id" value="" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%;">
+                    </div>
+
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left;">Nombre:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-mes-nombre" value="" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%;">
+                    </div>
+                </div>
+
+                <div class="popup-footer" style="margin-top: 15px; border: 1px solid #d4d4d4; background-color: #eaeaea; padding: 8px 20px; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button class="btn-action" id="popup-mes-grabar" style="padding: 5px 20px;">Grabar</button>
+                    <button class="btn-action" id="popup-mes-salir" style="padding: 5px 20px;">Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup para Entidades -->
+    <div class="popup-overlay" id="popup-entidad-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="popup-content" style="background-color: #f0f0f0; border: 2px solid #7a96df; border-radius: 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); width: 400px; max-height: 90vh; overflow-y: auto;">
+            <div class="popup-header" style="background: linear-gradient(to right, #99b4d1, #b8d0e9); padding: 5px 10px; color: #000; font-size: 13px; font-weight: bold; border-bottom: 1px solid #6384a3;">Entidades</div>
+            <div class="popup-title" style="background: linear-gradient(to bottom, #3372a5, #1b3750); color: white; text-align: center; padding: 10px; font-size: 16px; font-weight: bold; letter-spacing: 1px;">ENTIDADES</div>
+            <div class="popup-body" style="padding: 25px;">
+                <div class="popup-form-box" style="border: 1px solid #999999; background-color: #f7f9fc; padding: 25px 30px; display: grid; grid-template-columns: 100px 1fr; gap: 16px 15px; align-items: center;">
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left;">ID:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-entidad-id" value="" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%;">
+                    </div>
+
+                    <div class="popup-label-text" style="font-size: 14px; color: #104e8b; font-weight: bold; text-align: left;">Nombre:</div>
+                    <div>
+                        <input type="text" class="popup-input" id="popup-entidad-nombre" value="" style="background-color: #ffffff; border: 1px solid #7f9db9; padding: 4px 6px; font-size: 14px; outline: none; color: #000; width: 100%;">
+                    </div>
+                </div>
+
+                <div class="popup-footer" style="margin-top: 15px; border: 1px solid #d4d4d4; background-color: #eaeaea; padding: 8px 20px; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button class="btn-action" id="popup-entidad-grabar" style="padding: 5px 20px;">Grabar</button>
+                    <button class="btn-action" id="popup-entidad-salir" style="padding: 5px 20px;">Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 <script src="../../../../js/iframe-resize.js"></script>
 <script src="../../../../js/modal-close.js"></script>
+<script>
+    // URLs de la API
+    const API_BASE_URL = "https://fuerza-g-grupo-1-uy0x.onrender.com";
+    const API_MESES = `${API_BASE_URL}/api/mes`;
+    const API_ENTIDADES = `${API_BASE_URL}/api/entidad`;
+
+    // Elementos del DOM
+    const inputMes = document.getElementById("input-mes");
+    const spanMesNombre = document.getElementById("span-mes-nombre");
+    const inputEntidad = document.querySelector('.fields-container input[type="text"]:first-of-type');
+
+    // Elementos del popup Mes
+    const popupMesOverlay = document.getElementById("popup-mes-overlay");
+    const popupMesId = document.getElementById("popup-mes-id");
+    const popupMesNombre = document.getElementById("popup-mes-nombre");
+    const btnPopupMesGrabar = document.getElementById("popup-mes-grabar");
+    const btnPopupMesSalir = document.getElementById("popup-mes-salir");
+
+    // Elementos del popup Entidad
+    const popupEntidadOverlay = document.getElementById("popup-entidad-overlay");
+    const popupEntidadId = document.getElementById("popup-entidad-id");
+    const popupEntidadNombre = document.getElementById("popup-entidad-nombre");
+    const btnPopupEntidadGrabar = document.getElementById("popup-entidad-grabar");
+    const btnPopupEntidadSalir = document.getElementById("popup-entidad-salir");
+
+    let meses = [];
+    let entidades = [];
+
+    // Cargar meses desde la API
+    async function cargarMeses() {
+        try {
+            const response = await fetch(API_MESES);
+            if (!response.ok) throw new Error("Error al cargar meses");
+            meses = await response.json();
+            actualizarMesActual();
+        } catch (error) {
+            console.error("Error al cargar meses:", error);
+        }
+    }
+
+    // Cargar entidades desde la API
+    async function cargarEntidades() {
+        try {
+            const response = await fetch(API_ENTIDADES);
+            if (!response.ok) throw new Error("Error al cargar entidades");
+            entidades = await response.json();
+        } catch (error) {
+            console.error("Error al cargar entidades:", error);
+        }
+    }
+
+    // Actualizar el nombre del mes actual
+    function actualizarMesActual() {
+        const mesId = inputMes.value;
+        const mes = meses.find(m => m.id === parseInt(mesId));
+        if (mes) {
+            spanMesNombre.textContent = mes.nombre || mes.descripcion || "";
+        }
+    }
+
+    // Funciones del popup Mes
+    function mostrarPopupMes() {
+        popupMesOverlay.style.display = "flex";
+    }
+
+    function ocultarPopupMes() {
+        popupMesOverlay.style.display = "none";
+    }
+
+    async function grabarPopupMes() {
+        const id = popupMesId.value.trim();
+        const nombre = popupMesNombre.value.trim();
+
+        if (!id || !nombre) {
+            alert("Por favor complete todos los campos");
+            return;
+        }
+
+        const apiData = {
+            id: parseInt(id),
+            nombre: nombre
+        };
+
+        try {
+            const response = await fetch(API_MESES, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(apiData)
+            });
+            if (!response.ok) throw new Error("Error al crear mes");
+            alert("Mes creado exitosamente");
+            await cargarMeses();
+            ocultarPopupMes();
+        } catch (error) {
+            console.error("Error al guardar mes:", error);
+            alert("Error: No se pudo guardar en la API");
+        }
+    }
+
+    // Funciones del popup Entidad
+    function mostrarPopupEntidad() {
+        popupEntidadOverlay.style.display = "flex";
+    }
+
+    function ocultarPopupEntidad() {
+        popupEntidadOverlay.style.display = "none";
+    }
+
+    async function grabarPopupEntidad() {
+        const id = popupEntidadId.value.trim();
+        const nombre = popupEntidadNombre.value.trim();
+
+        if (!id || !nombre) {
+            alert("Por favor complete todos los campos");
+            return;
+        }
+
+        const apiData = {
+            id: parseInt(id),
+            nombre: nombre
+        };
+
+        try {
+            const response = await fetch(API_ENTIDADES, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(apiData)
+            });
+            if (!response.ok) throw new Error("Error al crear entidad");
+            alert("Entidad creada exitosamente");
+            await cargarEntidades();
+            ocultarPopupEntidad();
+        } catch (error) {
+            console.error("Error al guardar entidad:", error);
+            alert("Error: No se pudo guardar en la API");
+        }
+    }
+
+    // Event listeners
+    inputMes.addEventListener("change", actualizarMesActual);
+    btnPopupMesGrabar.addEventListener("click", grabarPopupMes);
+    btnPopupMesSalir.addEventListener("click", ocultarPopupMes);
+    btnPopupEntidadGrabar.addEventListener("click", grabarPopupEntidad);
+    btnPopupEntidadSalir.addEventListener("click", ocultarPopupEntidad);
+
+    // Cerrar popups al hacer clic fuera
+    popupMesOverlay.addEventListener("click", (e) => {
+        if (e.target === popupMesOverlay) ocultarPopupMes();
+    });
+    popupEntidadOverlay.addEventListener("click", (e) => {
+        if (e.target === popupEntidadOverlay) ocultarPopupEntidad();
+    });
+
+    // Cargar datos al iniciar
+    document.addEventListener("DOMContentLoaded", () => {
+        cargarMeses();
+        cargarEntidades();
+    });
+</script>
 </html>
