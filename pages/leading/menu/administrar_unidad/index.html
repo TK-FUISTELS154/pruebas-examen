@@ -466,13 +466,10 @@
                 if (!response.ok) throw new Error("Error al eliminar");
                 
                 unidades.splice(filaSeleccionada, 1);
-                filaSeleccionada = null;
-                renderizarTabla();
                 
-                // Deshabilitar botones
-                btnEditar.disabled = true;
-                btnEliminar.disabled = true;
-                btnSeleccionar.disabled = true;
+                // Restaurar estado después de eliminar
+                restaurarEstado();
+                renderizarTabla();
                 
                 alert("Eliminado exitosamente");
             } catch (error) {
@@ -491,13 +488,16 @@
             const unidad = unidades[filaSeleccionada];
             alert("Unidad seleccionada: " + unidad.descripcion);
             
-            // Aquí podrías enviar el dato al padre si es necesario
+            // Enviar dato al padre si es necesario
             if (window.parent !== window) {
                 window.parent.postMessage({ 
                     type: 'unidad-seleccionada', 
                     unidad: unidad 
                 }, '*');
             }
+            
+            // Restaurar estado después de seleccionar
+            restaurarEstado();
         }
 
         // Función Salir
