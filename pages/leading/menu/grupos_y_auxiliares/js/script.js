@@ -147,6 +147,13 @@ async function guardarGrupo() {
     const idGrupo = inputGrupo.value ? parseInt(inputGrupo.value) : (gruposContables.length > 0 ? Math.max(...gruposContables.map(g => g.idGrupo)) + 1 : 1);
     const nombreGrupo = selectNombre.options[selectNombre.selectedIndex]?.textContent || "NUEVO GRUPO";
     
+    // Mapear datos al esquema del API (ObjGasto)
+    const apiData = {
+        gestion: idGrupo,
+        partida: idGrupo.toString(),
+        descrip: nombreGrupo
+    };
+    
     const nuevoGrupo = {
         idGrupo: idGrupo,
         nombreGrupo: nombreGrupo,
@@ -158,19 +165,22 @@ async function guardarGrupo() {
 
     try {
         if (grupoOriginal) {
-            // Actualizar existente (PUT)
-            const response = await fetch(`${API_GRUPOS}/${idGrupo}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(nuevoGrupo)
-            });
-            if (!response.ok) throw new Error("Error al actualizar");
+            // Actualizar existente (PUT) usando posición
+            const posicion = gruposContables.findIndex(g => g.idGrupo === idGrupo);
+            if (posicion >= 0) {
+                const response = await fetch(`${API_GRUPOS}/${posicion}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(apiData)
+                });
+                if (!response.ok) throw new Error("Error al actualizar");
+            }
         } else {
             // Crear nuevo (POST)
             const response = await fetch(API_GRUPOS, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(nuevoGrupo)
+                body: JSON.stringify(apiData)
             });
             if (!response.ok) throw new Error("Error al crear");
         }
@@ -207,10 +217,14 @@ async function eliminarGrupo() {
     if (!confirm("¿Está seguro de eliminar este grupo?")) return;
 
     try {
-        const response = await fetch(`${API_GRUPOS}/${idSeleccionado}`, {
-            method: "DELETE"
-        });
-        if (!response.ok) throw new Error("Error al eliminar");
+        // Usar posición (índice) en lugar de ID para DELETE
+        const posicion = gruposContables.findIndex(g => g.idGrupo === idSeleccionado);
+        if (posicion >= 0) {
+            const response = await fetch(`${API_GRUPOS}/${posicion}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) throw new Error("Error al eliminar");
+        }
         
         gruposContables = gruposContables.filter(g => g.idGrupo !== idSeleccionado);
         inicializarSelector();
