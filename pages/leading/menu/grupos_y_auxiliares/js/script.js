@@ -1,6 +1,6 @@
 // URLs de la API
 const API_BASE_URL = "https://fuerza-g-grupo-1-uy0x.onrender.com";
-const API_GRUPOS = `${API_BASE_URL}/api/entidad`;
+const API_GRUPOS = `${API_BASE_URL}/api/objgasto`;
 
 const selectNombre = document.getElementById("select-nombre");
 const inputGrupo = document.getElementById("input-grupo");
@@ -44,12 +44,12 @@ async function cargarGrupos() {
         // Mapear datos del nuevo API a la estructura esperada
         if (rawData.length > 0) {
             gruposContables = rawData.map(item => ({
-                idGrupo: item.id || item.entidad || 1,
-                nombreGrupo: item.nombre || item.descripcion || "GRUPO CONTABLE",
-                vidaUtil: item.vidaUtil || 10,
-                deprecia: item.deprecia !== undefined ? item.deprecia : true,
-                actualiza: item.actualiza !== undefined ? item.actualiza : true,
-                observaciones: item.observaciones || ""
+                idGrupo: item.gestion || item.partida || 1,
+                nombreGrupo: item.descrip || "GRUPO CONTABLE",
+                vidaUtil: 10,
+                deprecia: true,
+                actualiza: true,
+                observaciones: ""
             }));
         } else {
             // Si el API está vacío, usar datos de prueba
