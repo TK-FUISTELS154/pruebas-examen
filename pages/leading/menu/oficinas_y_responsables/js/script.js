@@ -93,8 +93,8 @@ async function cargarEstados() {
         estados = await response.json();
     } catch (error) {
         console.error("Error al cargar estados:", error);
-        console.log("Usando datos de prueba de estados...");
-        estados = [...datosPruebaEstados];
+        alert("Error: No se pudo conectar con la API de estados. Verifique la conexión.");
+        estados = [];
     }
 }
 
@@ -120,8 +120,8 @@ async function cargarOficinas() {
         inicializarSelector();
     } catch (error) {
         console.error("Error al cargar oficinas:", error);
-        console.log("Usando datos de prueba de oficinas...");
-        oficinas = [...datosPruebaOficinas];
+        alert("Error: No se pudo conectar con la API de oficinas. Verifique la conexión.");
+        oficinas = [];
         inicializarSelector();
     }
 }

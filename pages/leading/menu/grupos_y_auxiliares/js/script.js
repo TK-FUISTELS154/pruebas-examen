@@ -60,16 +60,14 @@ async function cargarGrupos() {
                 observaciones: ""
             }));
         } else {
-            // Si el API está vacío, usar datos de prueba
-            console.log("API vacía, usando datos de prueba...");
-            gruposContables = [...datosPrueba];
+            gruposContables = [];
         }
         
         inicializarSelector();
     } catch (error) {
         console.error("Error al cargar grupos:", error);
-        console.log("Usando datos de prueba...");
-        gruposContables = [...datosPrueba];
+        alert("Error: No se pudo conectar con la API. Verifique la conexión.");
+        gruposContables = [];
         inicializarSelector();
     }
 }
@@ -205,16 +203,7 @@ async function guardarGrupo() {
         alert("Guardado exitosamente");
     } catch (error) {
         console.error("Error al guardar:", error);
-        // Guardar localmente si falla la API
-        const index = gruposContables.findIndex(g => g.idGrupo === idGrupo);
-        if (index >= 0) {
-            gruposContables[index] = nuevoGrupo;
-        } else {
-            gruposContables.push(nuevoGrupo);
-        }
-        inicializarSelector();
-        restaurarEstado();
-        alert("Guardado localmente (API no disponible)");
+        alert("Error: No se pudo guardar en la API. Verifique la conexión.");
     }
 }
 
@@ -238,9 +227,7 @@ async function eliminarGrupo() {
         alert("Eliminado exitosamente");
     } catch (error) {
         console.error("Error al eliminar:", error);
-        gruposContables = gruposContables.filter(g => g.idGrupo !== idSeleccionado);
-        inicializarSelector();
-        alert("Eliminado localmente (API no disponible)");
+        alert("Error: No se pudo eliminar en la API. Verifique la conexión.");
     }
 }
 
